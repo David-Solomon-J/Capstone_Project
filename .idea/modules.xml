@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Capstone_Project.iml" filepath="$PROJECT_DIR$/.idea/Capstone_Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music-backend/music-backend.iml" filepath="$PROJECT_DIR$/music-backend/music-backend.iml" />
     </modules>
   </component>
 </project>
