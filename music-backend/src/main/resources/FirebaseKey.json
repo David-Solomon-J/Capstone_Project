@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "capstoneproj-music",
+  "private_key_id": "4bb19fd07eaae3c18e47d9a62b79a4f3b98174e1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7ehSPC2Cy+NfU\nVv0ytFwioR+YN2lJgZg83BF0CCm1bPE3pNDYIwBZE3AzpmBrc9gP5rfjOopQlPrg\nzFZs+YwEe1Ju+a0QvnxQNcbv+tzbc0Wn056SX1qwcIK1Ld2AL4UzgUQTgLr75fN7\nm9thpFSobjyVNaEULMN+bfm9OZ85OWW3PZKGx2mTY99MAIPB6AbDCw/QH7pK6oVV\nB+BndyfUVEcoVosK1nvyTrrKVNnmVUwMwbyOR6IFndJ9cN9697g28CNr1FwuKwZ3\nf4wkyc2XTyhmRDrxptU8ja3WXfIc2CXg7G9cmU0CqO8OiHSXi1RPt2BG2NBsgWqk\nH0lZvIjrAgMBAAECggEABao9CswrjNzrcKrRldb7Xb8upuPYa58zNsuTlMUBCvlo\nGegCDjXojHMuQHFLl+j1OMMeVWBvI4Y3mn6yMd13N1TJUI8nhUpW6U7msa5hPsRZ\n8NClNFkV8spDji6nnc2nIb+gi1JS1B/GXrrT7ecQTn1I7rKjKRU9MbR9smkWVZ1I\nIFMi2rNAQKVw7apDFaC/k69WDBuhxcGBzlBPjx9MTHY97RpjOnz23BB0w24sZNdH\nTRM7USCH5BJ6Qh1OgRDrgGMgJO++TcIkpwAhclXNzbe6+JZh/DL832s1JSFhWZQe\nh5FGhISv2r1uRyAqduisMPRYwgzLvmMtj3Fh8wGjgQKBgQDpcQ+nlGskyiWYtvvs\ngZlg8SO/c4AxTsL2ObyiM8EsTc2PAvJYZ+VNmdElHTNqLEtH8HqG/Ja3ecwv7cAj\nuJM/VnfR/2ZJ+7qfoukplvitR6wBrd3GI1EcfkV0Uk/WFAkRulUAG+8pnrz/E0DH\n2rhdQj6hIV23nzGl/kFx/rUXQQKBgQDNl+5WFzBopo1QvNoXzdZxMZNSgIQPE0IH\nslqOd2yhoHujVPc48Zmpn6KUGLxIbSpFvAgTAeAC/JT20AmXju5JvUUv7y5EKPzS\nwNZF98lwLSOZ0RafN8fQ0kQD3iHedqv9OVxuziWhVNihcSk4QS4WmZM9x+cxukaY\nvqaihQJhKwKBgDuPVjAqhP+498iz/yjDlC+Qts81F+L8tm9+Iau8yq+UFjtDxDNc\nJrwa36q5fZG8RWTQbWKddZLQZ5Fe9qPmhuMlG6Mfp6h+qonqVdT/qOkFHVS8WJYi\nEqLTcMMR8T6sk/fK8774YZfb4VqvPdr/6gQZT8NqsO+VlWRFr8r28ptBAoGAS1SI\n6phyj1W/X77itmggU7dTgJ5ARPnMbt+F2L+fWRVhV/ZQ41d68zDftB3gFzWQkJ6V\n4skEGHQN7OVLLnIbk387M5YSwLy37kzj9h0VfPm9GqYHAO3CVBxG+ZfRlx6qZA05\ndgwos5VQDs9UyBzx0ywQTEnLx2e2aE8q5U+REKMCgYAeD3S4VuxjWvgi1zRHEk6+\nExv77b+LcVtATN5CTkcx4z5TKxFabSDjsQcTA4eJBXkfJUIRObdK22cczZAyJav5\nUq0zADne3w3BT0qBfWfdQBb0I+AtGHlW3vl17il8CI2PPAKeEWColB1+s6AYzeET\nt7wIWdRoBORn/g6XuRCuvA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-acr36@capstoneproj-music.iam.gserviceaccount.com",
+  "client_id": "107042814991657923604",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-acr36%40capstoneproj-music.iam.gserviceaccount.com"
+}
