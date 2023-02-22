@@ -2,7 +2,7 @@ import {Link, useNavigate} from "react-router-dom";
 import React, {useContext, useRef, useState} from "react";
 import {AuthContext} from "../context/AuthContext";
 import "../styles/styles.css"
-// import {FontAwesome} from "@fortawesome/fontawesome-free/css/all.min.css";
+
 function SignUp() {
 
     const context = useContext(AuthContext);
@@ -11,43 +11,10 @@ function SignUp() {
     const [errors, setErrors] = useState([]);
     let navigate = useNavigate();
 
-    // let client_id = "4bcd6ab963f844cd984df774aac47791";
-    // let client_secret =   "9c1f076f76c145b4a221386761209322";
-    //
-    // let num;
-    //
-    // const getToken = async () => {
-    //     //Fetch using spotify base URL and headers containing client id & secret
-    //     const result = await fetch('https://accounts.spotify.com/api/token', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/x-www-form-urlencoded',
-    //             'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret)
-    //         },
-    //         body: 'grant_type=client_credentials'
-    //     })
-    //         //Then response with assign function to access variable in promise
-    //         .then(
-    //             res => {
-    //                 res.access_token.json()
-    //                 assignTK(res)
-    //             }
-    //         );
-    //
-    // }
-    //
-    // let assignTK = (x) => {
-    //     num = x;
-    //     //console.log(num);
-    //     console.log("Token is: " + num)
-    //     return num;
-    // }
-    //
-    // getToken();
 
     async function handelSubmit(event) {
         event.preventDefault();
-        let x = await context.signUp(emailRef.current.value, passwordRef.current.value);
+        let x = await context.signIn(emailRef.current.value, passwordRef.current.value);
 
         if(x){
             navigate("/Home");
@@ -69,12 +36,13 @@ function SignUp() {
                                 <div className="row justify-content-center">
                                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-                                        <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                                        <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign In</p>
 
                                         <form className="mx-1 mx-md-4" onSubmit={handelSubmit}>
 
 
                                             <div className="input-group mb-3 w-100 center">
+                                                {/*<FontAwesomeIcon icon="fa-solid fa-envelope" />*/}
                                                 <span className="input-group-text" id="basic-addon1">Email</span>
                                                 <input type="email" className="form-control" placeholder="Username" aria-label="Username"
                                                        aria-describedby="basic-addon1" required ref={emailRef}/>
@@ -87,13 +55,12 @@ function SignUp() {
                                             </div>
 
                                             <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                                <button type="submit" className="btn btn-primary btn-lg">Register
+                                                <button type="submit" className="btn btn-primary btn-lg">Login
                                                 </button>
 
-                                                    <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-
-                                                <Link to="/SignIn">
-                                                    <button type="button" className="btn btn-primary btn-lg">Return</button>
+                                                <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <Link to="/">
+                                                    <button type="button" className="btn btn-primary btn-lg">Sign Up</button>
                                                 </Link>
                                             </div>
 

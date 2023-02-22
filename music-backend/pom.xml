@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>edu.famu</groupId>
-    <artifactId>MusiclyBackend</artifactId>
+    <artifactId>MusicBackend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MusiclyBackend</name>
-    <description>MusiclyBackend</description>
+    <name>MusicBackend</name>
+    <description>MusicBackend</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -46,8 +46,9 @@
             <version>8.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>8.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.auth</groupId>
@@ -65,7 +66,7 @@
                 <configuration>
                     <excludes>
                         <exclude>
-                            <groupId>org.projectlombok</groupId>
+                            <groupId>org.project-lombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>

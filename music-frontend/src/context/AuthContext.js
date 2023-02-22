@@ -89,8 +89,8 @@ export class AuthProvider extends Component {
                 .catch(function (err) {
                     // Handle Errors here.
                     console.log(this)
-                    this.setCurrentUser(null);
-                    this.setErrors(err.response, false);
+                    //this.setCurrentUser(null);
+                    //this.setErrors(err.response, false);
                 });
 
             //refersh token every 30 minutes
