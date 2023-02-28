@@ -5,3 +5,11 @@
 #C-level{
     border-radius: 25px;
 }
+
+#navBar {
+    float: left;
+}
+#bdy {
+    margin-left: 5%;
+}
+

@@ -2,13 +2,13 @@ import '../App.css';
 import NavBar from './NavBar'
 import '../styles/styles.css'
 
-function Home() {
+function MyPlyst() {
     return (
         <>
             <div className="wrapper" id="wrapper">
                 <div id="navBar"><NavBar/></div>
                 <div className="container" id="bdy">
-                    <h1>Home</h1>
+                    <h1>Your playlist</h1>
                 </div>
 
             </div>
@@ -16,4 +16,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default MyPlyst;
