@@ -24,7 +24,18 @@ const getToken = async () => {
 
 }
 
+const getPlaylist = async (token) => {
 
+    const plyListURL = 'https://api.spotify.com/v1/browse/featured-playlists?limit=20';
+    const result = await fetch(plyListURL, {
+        method: 'GET',
+        headers: { 'Authorization' : 'Bearer ' + token}
+    })
+        .then(res => res.json())
+        .then(data => assignPY(data.playlists.items));
+
+
+}
 
 let assignTK = (x) => {
     num = x;
@@ -34,6 +45,7 @@ let assignTK = (x) => {
 }
 
 getToken();
+getPlaylist(num);
 
 function songSearch() {
     return (
