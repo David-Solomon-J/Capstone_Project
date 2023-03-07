@@ -1,9 +1,9 @@
 import NavBar from './NavBar'
 import NavBarAdm from './NavBarAdm'
 import '../styles/styles.css'
-import React, {Component, useContext} from 'react';
+import React, {Component} from 'react';
 
-class Home extends Component {
+class Reports extends Component {
     constructor(props) {
         super(props);
 
@@ -21,7 +21,7 @@ class Home extends Component {
                     }
 
                     <div className="container" id="bdy">
-                        <h1>Home</h1>
+                        <h1>Reports</h1>
                     </div>
 
                 </div>
@@ -31,4 +31,4 @@ class Home extends Component {
 }
 
 
-export default Home;
+export default Reports;

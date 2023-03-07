@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import axios from "axios";
 import {initializeApp} from "firebase/app";
 import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 export const AuthContext = React.createContext({
     currentUser: {},
@@ -10,6 +11,7 @@ export const AuthContext = React.createContext({
     refresh: null,
     setErrors: () =>{},
     setCurrentUser: () => {},
+    getUsers: () =>{},
     signIn: () =>{},
     signOut: () =>{},
     signUp: () =>{},
@@ -59,7 +61,7 @@ export class AuthProvider extends Component {
             };
 
             // Initialize Firebase
-            initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
 
             const auth = getAuth();
             signInWithEmailAndPassword(auth, email, password)
@@ -72,7 +74,7 @@ export class AuthProvider extends Component {
                     let res = await user.getIdTokenResult(false);
                     let token = res.token;
                     localStorage.setItem("firebaseResponse", JSON.stringify(res));
-                    let headers = {"Authorization": "Bearer " + token}
+                    let headers = {"Authorization": "Bearer " + token, "Access-Control-Allow-Headers": "Accept"}
 
                     await axios.post ("http://localhost:8080/auth/session", document.body, {
                         headers: headers,
@@ -89,8 +91,8 @@ export class AuthProvider extends Component {
                 .catch(function (err) {
                     // Handle Errors here.
                     console.log(this)
-                    //this.setCurrentUser(null);
-                    //this.setErrors(err.response, false);
+                    this.setCurrentUser(null);
+                    this.setErrors(err.response, false);
                 });
 
             //refersh token every 30 minutes
@@ -104,6 +106,30 @@ export class AuthProvider extends Component {
                 //stop token refresh
                 clearInterval(this.state.refresh );
             }).catch(err => console.log(err));
+        },
+        getUsers: async ()=>{
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+
+            //Get all users from the Users collection
+            const db = firebase.firestore();
+            const usersRef = db.collection("users");
+
+            usersRef.get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    console.log("Hey");
+                    //`${doc.id} => ${doc.data()}`
+                });
+            });
         },
 
         signUp: async (email, password)=>{
@@ -134,7 +160,7 @@ export class AuthProvider extends Component {
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    this.state.setErrors(error.response.data, false);
+                    //this.state.setErrors(error.response.data, false);
                     // ..
                 });
             return flag;
@@ -157,10 +183,10 @@ export class AuthProvider extends Component {
     render() {
 
         const { children } = this.props
-        const {currentUser, errors, cart,refresh, setErrors, setCurrentUser, signIn, signOut, signUp } = this.state
+        const {currentUser, errors, cart,refresh, setErrors, setCurrentUser, getUsers, signIn, signOut, signUp } = this.state
 
         return (
-            <AuthContext.Provider value={{currentUser, errors, cart, refresh, setErrors, setCurrentUser, signIn, signOut, signUp}}>
+            <AuthContext.Provider value={{currentUser, errors, cart, refresh, setErrors, setCurrentUser, getUsers, signIn, signOut, signUp}}>
                 {children}
             </AuthContext.Provider>
         );

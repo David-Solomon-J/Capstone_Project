@@ -50,7 +50,7 @@ function SignUp() {
         let x = await context.signUp(emailRef.current.value, passwordRef.current.value);
 
         if(x){
-            navigate("/Home");
+            navigate("/");
         }
         else {
             setErrors(context.errors);

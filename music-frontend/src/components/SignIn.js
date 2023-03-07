@@ -3,7 +3,7 @@ import React, {useContext, useRef, useState} from "react";
 import {AuthContext} from "../context/AuthContext";
 import "../styles/styles.css"
 
-function SignUp() {
+function SignIn() {
 
     const context = useContext(AuthContext);
     const emailRef = useRef("");
@@ -11,18 +11,24 @@ function SignUp() {
     const [errors, setErrors] = useState([]);
     let navigate = useNavigate();
 
+    context.getUsers();
 
     async function handelSubmit(event) {
-        event.preventDefault();
-        let x = await context.signIn(emailRef.current.value, passwordRef.current.value);
 
-        if(x){
-            navigate("/Home");
+        console.log("execute");
+        event.preventDefault();
+
+        await context.signIn(emailRef.current.value, passwordRef.current.value);
+
+        if(context.currentUser != null)
+        {
+            context.setErrors(null, false);
+            navigate("/");
+
         }
         else {
             setErrors(context.errors);
         }
-        console.log("Mounted")
     }
 
 
@@ -59,9 +65,11 @@ function SignUp() {
                                                 </button>
 
                                                 <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                <Link to="/">
+                                                <Link to="/SignUp">
                                                     <button type="button" className="btn btn-primary btn-lg">Sign Up</button>
                                                 </Link>
+
+
                                             </div>
 
                                         </form>
@@ -85,4 +93,4 @@ function SignUp() {
     );
 }
 
-export default SignUp;
+export default SignIn;

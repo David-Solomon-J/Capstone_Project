@@ -2,14 +2,19 @@
     width: 250px;
     transition: width 0.3s ease-in-out;
     height: 100vh;
+    position: fixed !important;
+    bottom: 0 !important;
     background-color: rgb(10, 25, 41);
     padding-top: 28px;
+    z-index: 2;
 }
 .sidenavClosed {
     composes: sidenav;
     transition: width 0.3s ease-in-out;
     width: 80px;
-    display: inline-block;
+    position: fixed !important;
+    bottom: 0 !important;
+
 }
 .sideitem {
     display: flex;

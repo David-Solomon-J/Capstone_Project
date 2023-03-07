@@ -4,6 +4,8 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 export const navData = [
     {
@@ -38,6 +40,18 @@ export const navData = [
     },
     {
         id: 5,
+        icon: <FolderOpenIcon />,
+        text: "Reports",
+        link: "/Reports"
+    },
+    {
+        id: 6,
+        icon: <PersonIcon  />,
+        text: "User Search",
+        link: "/UserSearch"
+    },
+    {
+        id: 7,
         icon: <LogoutIcon  />,
         text: "Sign Out",
         link: "/SignIn"
