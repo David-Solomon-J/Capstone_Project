@@ -1,7 +1,10 @@
 import {Link, useNavigate} from "react-router-dom";
-import React, {useContext, useRef, useState} from "react";
+import React, {useContext, useRef, useState, useEffect} from "react";
 import {AuthContext} from "../context/AuthContext";
 import "../styles/styles.css"
+import PersonIcon from '@mui/icons-material/Person';
+import LockIcon from '@mui/icons-material/Lock';
+
 
 function SignIn() {
 
@@ -11,16 +14,15 @@ function SignIn() {
     const [errors, setErrors] = useState([]);
     let navigate = useNavigate();
 
-    context.getUsers();
 
-    async function handelSubmit(event) {
+    async function HandleSubmit(event) {
 
         console.log("execute");
         event.preventDefault();
 
         await context.signIn(emailRef.current.value, passwordRef.current.value);
 
-        if(context.currentUser != null)
+        if(context.currentUser.email != null)
         {
             context.setErrors(null, false);
             navigate("/");
@@ -28,8 +30,9 @@ function SignIn() {
         }
         else {
             setErrors(context.errors);
+            alert("Incorrect information")
         }
-    }
+        }
 
 
     return (
@@ -44,7 +47,7 @@ function SignIn() {
 
                                         <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign In</p>
 
-                                        <form className="mx-1 mx-md-4" onSubmit={handelSubmit}>
+                                        <form className="mx-1 mx-md-4" onSubmit={HandleSubmit}>
 
 
                                             <div className="input-group mb-3 w-100 center">
@@ -52,12 +55,14 @@ function SignIn() {
                                                 <span className="input-group-text" id="basic-addon1">Email</span>
                                                 <input type="email" className="form-control" placeholder="Username" aria-label="Username"
                                                        aria-describedby="basic-addon1" required ref={emailRef}/>
+                                                <PersonIcon className="m-lg-2"/>
                                             </div>
 
                                             <div className="input-group mb-6 w-100 center">
                                                 <span className="input-group-text" id="basic-addon2">Password</span>
                                                 <input type="password" className="form-control" placeholder="Password" aria-label="Username"
                                                        aria-describedby="basic-addon2" required ref={passwordRef}/>
+                                                <LockIcon className="m-lg-2"/>
                                             </div>
 
                                             <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
@@ -92,5 +97,7 @@ function SignIn() {
         </div>
     );
 }
+
+
 
 export default SignIn;

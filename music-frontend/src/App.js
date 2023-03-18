@@ -10,7 +10,15 @@ import UserSearch from "./components/UserSearch";
 import {AuthProvider} from "./context/AuthContext";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
+// const cors = require('cors');
+// const corsOptions ={
+//     origin:'http://localhost:3000',
+//     credentials:true,            //access-control-allow-credentials:true
+//     optionSuccessStatus:200
+// }
+
 function App() {
+
   return (
       <AuthProvider>
 
@@ -30,6 +38,8 @@ function App() {
 
       </AuthProvider>
   );
+    // App.use(cors(corsOptions));
 }
+
 
 export default App;

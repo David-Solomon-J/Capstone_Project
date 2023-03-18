@@ -1,9 +1,12 @@
-import React, {Component} from 'react';
+import React, {Component, useRef} from 'react';
 import axios from "axios";
 import {initializeApp} from "firebase/app";
 import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { getFirestore } from "firebase/firestore";
+
+
 
 export const AuthContext = React.createContext({
     currentUser: {},
@@ -12,6 +15,8 @@ export const AuthContext = React.createContext({
     setErrors: () =>{},
     setCurrentUser: () => {},
     getUsers: () =>{},
+    getInfo: () =>{},
+    changeName: () => {},
     signIn: () =>{},
     signOut: () =>{},
     signUp: () =>{},
@@ -20,6 +25,7 @@ export const AuthContext = React.createContext({
 
 export class AuthProvider extends Component {
     uidNum;
+
 
     state = {
         currentUser: {},
@@ -72,20 +78,26 @@ export class AuthProvider extends Component {
 
                     let user = cred.user;
                     let res = await user.getIdTokenResult(false);
+
+                    this.state.setCurrentUser(user);
+                    localStorage.setItem("user", JSON.stringify(this.state.currentUser));
+
+
                     let token = res.token;
                     localStorage.setItem("firebaseResponse", JSON.stringify(res));
-                    let headers = {"Authorization": "Bearer " + token, "Access-Control-Allow-Headers": "Accept"}
 
-                    await axios.post ("http://localhost:8080/auth/session", document.body, {
-                        headers: headers,
-                        context: document.body
-                    }).then((res)=>{
-                        this.state.setCurrentUser(res.data.User);
-                        localStorage.setItem("user", JSON.stringify(this.state.currentUser));
-                    }).catch((err) => {
-                        console.log(err);
-                        this.state.setErrors(err.response.data, false);
-                    })
+                    // let headers = {"Authorization": "Bearer " + token}
+                    //
+                    // await axios.post ("http://localhost:8080/auth/session", document.body, {
+                    //     headers: headers,
+                    //     context: document.body
+                    // }).then((res)=>{
+                    //     this.state.setCurrentUser(res.data.User);
+                    //     localStorage.setItem("user", JSON.stringify(this.state.currentUser));
+                    // }).catch((err) => {
+                    //     console.log(err);
+                    //     this.state.setErrors(err.response.data, false);
+                    // })
 
                 })
                 .catch(function (err) {
@@ -119,17 +131,93 @@ export class AuthProvider extends Component {
             };
 
             firebase.initializeApp(firebaseConfig);
-
-            //Get all users from the Users collection
             const db = firebase.firestore();
-            const usersRef = db.collection("users");
+            let stuff = [], list = [];
 
-            usersRef.get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    console.log("Hey");
-                    //`${doc.id} => ${doc.data()}`
-                });
+
+            const DocumentReference = db.collection("User");
+
+            const call = async () => {
+                const snapshot = await DocumentReference.get().then(
+                    res => {
+                        res.forEach(doc => {
+                            //console.log(doc.id, '=>', doc.data());
+                            stuff.push(doc.data())
+                        });
+                        return stuff;
+                    }
+                );
+
+                return snapshot
+            }
+            //
+            // snapshot.forEach(doc => {
+            //     console.log(doc.id, '=>', doc.data());
+            //     this.setState({users: doc.data()});
+            // });
+
+            list = await call();
+            console.log(list);
+
+            return await call();
+        },
+
+        getInfo: async (ID)=> {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            let id = "8Qk89MDMptOm81UjKlh0h85QZA63";
+
+            const userRef = db.collection('User');
+
+            //Working Set Function!!!!!
+            // await userRef.doc('tWBi0IWXnSTbNSYNCZ2VcZAVGcu2').set({
+            //     isAdmin: false
+            // });
+
+            const doc = await userRef.doc(ID).get();
+
+            if (!doc.exists) {
+                console.log('No such document!');
+
+            } else {
+                this.state.setCurrentUser(doc.data());
+                //console.log('Document data:', doc.data());
+            }
+
+            },
+
+        changeName: async (ID, name)=> {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+
+            const userRef = db.collection('User');
+
+            //Working Set Function!!!!!
+            await userRef.doc(ID).update({
+                user_Fname: name
             });
+
         },
 
         signUp: async (email, password)=>{
@@ -144,7 +232,6 @@ export class AuthProvider extends Component {
 
             // Initialize Firebase
             initializeApp(firebaseConfig);
-
 
             const auth = getAuth();
             let flag = false;
@@ -183,10 +270,10 @@ export class AuthProvider extends Component {
     render() {
 
         const { children } = this.props
-        const {currentUser, errors, cart,refresh, setErrors, setCurrentUser, getUsers, signIn, signOut, signUp } = this.state
+        const {currentUser, errors, cart,refresh, setErrors, setCurrentUser, getUsers, getInfo, changeName, signIn, signOut, signUp } = this.state
 
         return (
-            <AuthContext.Provider value={{currentUser, errors, cart, refresh, setErrors, setCurrentUser, getUsers, signIn, signOut, signUp}}>
+            <AuthContext.Provider value={{currentUser, errors, cart, refresh, setErrors, setCurrentUser, getUsers, getInfo, changeName, signIn, signOut, signUp}}>
                 {children}
             </AuthContext.Provider>
         );

@@ -4,8 +4,7 @@ import React, {Component} from 'react';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 
-
-class SongSearch  extends Component{
+class SongSearch extends Component{
     constructor(props) {
         super(props);
         this.state = {songs: [], tk: ""}
@@ -44,20 +43,6 @@ class SongSearch  extends Component{
 
         }
 
-
-        /*const getTracks = async (token) => {
-
-            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput + '&type=' + tInput + '&genre=' + gInput;
-            const resultSongs = await fetch(plyListURL, {
-                method: 'GET',
-                headers: {'Authorization': 'Bearer ' + token}
-            })
-                .then(res => res.json())
-                .then(res => assign(res.tracks.items));
-
-
-        }*/
-
         let assignTK = (x) => {
             this.setState({tk: x})
             console.log(this.state.tk);
@@ -81,7 +66,7 @@ class SongSearch  extends Component{
 
         const getTrack = async () => {
 
-            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput + '&type=' + tInput + '&genre=' + gInput;
+            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput + '&type=' + tInput + '&genre=' + gInput + "&limit=30";
             const resultSongs = await fetch(plyListURL, {
                     method: 'GET',
                     headers: {'Authorization': 'Bearer ' + this.state.tk}
@@ -153,17 +138,54 @@ class SongSearch  extends Component{
                     </div>
 
                 <div className="searchContainer" id="searchContainer">
-                    <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Kendrick")}>
-                        Kendrick Lamar
-                    </button>
+                    <div className="row mb-3">
+                        <div className="col d-flex align-content-center">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Kendrick")}>
+                                Kendrick Lamar
+                            </button>
+                        </div>
 
-                    <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Drake")}>
-                        Drizzy
-                    </button>
+                        <div className="col d-flex align-content-center">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Drake")}>
+                                Drizzy
+                            </button>
+                        </div>
+                    </div>
 
-                        <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("J.cole")}>
-                        Cole World
-                    </button>
+                    <div className="row mb-3">
+                        <div className="col">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("J.cole")}>
+                                Cole World
+                            </button>
+                        </div>
+
+                        <div className="col">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Kodak")}>
+                                Kodak Moment
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="row mb-3">
+                        <div className="col">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("John Legend")}>
+                                John the legend
+                            </button>
+                        </div>
+                        <div className="col d-flex align-content-center">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Tupac")}>
+                                2 Pac
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="row mb-3">
+                        <div className="col d-flex align-content-center">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("Lauryn hill")}>
+                                Ms. Hill
+                            </button>
+                        </div>
+                    </div>
                     </div>
                 </div>
 

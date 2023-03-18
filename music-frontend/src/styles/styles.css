@@ -11,6 +11,51 @@
     float: left;
 }
 #bdy {
+    /*margin-left: 5%;*/
+}
+
+#homeBdy{
+    height: 100vh !important;
+    min-width: 95%;
     margin-left: 5%;
 }
 
+.inf-content{
+    border:1px solid #DDDDDD;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+    box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
+}
+
+#inputName{
+    display: none;
+}
+
+#foot{
+    position:fixed;
+    height: 500px;
+    left:0px;
+    bottom:0px;
+    width:100%;
+
+}
+
+table.genPlyTbl{
+    overflow-y:scroll;
+    height:100vh;
+    display:block;
+}
+
+th, td {
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 40px;
+}
+
+audio {
+    color: #b2bac2;
+    width: 250px;
+    height: 50px;
+}
