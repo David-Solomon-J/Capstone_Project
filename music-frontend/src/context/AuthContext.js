@@ -1,4 +1,4 @@
-import React, {Component, useRef} from 'react';
+import React, {Component, useEffect, useRef} from 'react';
 import axios from "axios";
 import {initializeApp} from "firebase/app";
 import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
@@ -10,10 +10,12 @@ import { getFirestore } from "firebase/firestore";
 
 export const AuthContext = React.createContext({
     currentUser: {},
+    allUsers: {},
     errors: [],
     refresh: null,
     setErrors: () =>{},
-    setCurrentUser: () => {},
+    setCurrentUser: () =>{},
+    setAllUsers: () =>{},
     getUsers: () =>{},
     getInfo: () =>{},
     changeName: () => {},
@@ -29,6 +31,7 @@ export class AuthProvider extends Component {
 
     state = {
         currentUser: {},
+        allUsers: {},
         setErrors: (errObject, append) => {
             if(append)
             {
@@ -42,6 +45,9 @@ export class AuthProvider extends Component {
         },
         setCurrentUser: user =>{
             this.setState({currentUser: user})
+        },
+        setAllUsers: user =>{
+            this.setState({allUsers: user})
         },
         addToCart: item =>{
             let cart = this.state.cart;
@@ -77,6 +83,7 @@ export class AuthProvider extends Component {
 
 
                     let user = cred.user;
+                    console.log("cred_user",user)
                     let res = await user.getIdTokenResult(false);
 
                     this.state.setCurrentUser(user);
@@ -111,15 +118,16 @@ export class AuthProvider extends Component {
             this.state.refresh = setInterval(this.getRefresh, 300000, auth)
         },
         signOut: async ()=>{
-            await axios.get("http://localhost:3000/logout").then( res =>{
+            // await axios.get("http://localhost:3000/logout").then( res =>{
                 this.state.setCurrentUser({});
                 localStorage.removeItem("user");
                 localStorage.removeItem("firebaseResponse");
                 //stop token refresh
                 clearInterval(this.state.refresh );
-            }).catch(err => console.log(err));
+            // }).catch(err => console.log(err));
         },
-        getUsers: async ()=>{
+
+        getUsers: async ()=> {
 
             const firebaseConfig = {
                 apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
@@ -130,36 +138,42 @@ export class AuthProvider extends Component {
                 appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
             };
 
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            let stuff = [], list = [];
+                firebase.initializeApp(firebaseConfig);
+                const db = firebase.firestore();
+                let stuff = [], list = [];
 
 
-            const DocumentReference = db.collection("User");
+                const DocumentReference = db.collection("User");
 
-            const call = async () => {
-                const snapshot = await DocumentReference.get().then(
-                    res => {
-                        res.forEach(doc => {
-                            //console.log(doc.id, '=>', doc.data());
-                            stuff.push(doc.data())
-                        });
-                        return stuff;
-                    }
-                );
+                const Call = async () => {
+                    const snapshot = await DocumentReference.get().then(
+                        res => {
+                            res.forEach(doc => {
+                                //console.log(doc.id, '=>', doc.data());
+                                stuff.push(doc.data())
+                            });
+                            return stuff;
+                        }
+                    );
 
-                return snapshot
-            }
-            //
-            // snapshot.forEach(doc => {
-            //     console.log(doc.id, '=>', doc.data());
-            //     this.setState({users: doc.data()});
-            // });
+                    useEffect(() => {
+                        if (snapshot == null) {
+                            console.log('No such document!');
 
-            list = await call();
-            console.log(list);
+                        } else {
 
-            return await call();
+                        }
+                    }, [])
+
+
+                    return snapshot
+                }
+
+                list = await Call();
+
+                console.log(list);
+                console.log(this.allUsers)
+
         },
 
         getInfo: async (ID)=> {
@@ -214,6 +228,7 @@ export class AuthProvider extends Component {
             const userRef = db.collection('User');
 
             //Working Set Function!!!!!
+            console.log(ID)
             await userRef.doc(ID).update({
                 user_Fname: name
             });
@@ -270,10 +285,10 @@ export class AuthProvider extends Component {
     render() {
 
         const { children } = this.props
-        const {currentUser, errors, cart,refresh, setErrors, setCurrentUser, getUsers, getInfo, changeName, signIn, signOut, signUp } = this.state
+        const {currentUser, allUsers, errors, cart,refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, signUp } = this.state
 
         return (
-            <AuthContext.Provider value={{currentUser, errors, cart, refresh, setErrors, setCurrentUser, getUsers, getInfo, changeName, signIn, signOut, signUp}}>
+            <AuthContext.Provider value={{currentUser, allUsers, errors, cart, refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, signUp}}>
                 {children}
             </AuthContext.Provider>
         );

@@ -12,7 +12,7 @@ export const navData = [
         id: 0,
         icon: <HomeIcon />,
         text: "Home",
-        link: "/"
+        link: "/Home"
     },
     {
         id: 1,
@@ -54,6 +54,6 @@ export const navData = [
         id: 7,
         icon: <LogoutIcon  />,
         text: "Sign Out",
-        link: "/SignIn"
+        link: "/SignOut"
     },
 ];

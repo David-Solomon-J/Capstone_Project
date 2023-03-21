@@ -8,8 +8,9 @@ function Messages() {
     const context = useContext(AuthContext)
 
     useEffect(()=>{
-        let user = JSON.parse(localStorage.getItem("user"));
-        context.getInfo(user.uid);
+        //let user = JSON.parse(localStorage.getItem("user"));
+
+        context.getInfo(context.currentUser.uid);
         //setUser(user);
     },[])
 

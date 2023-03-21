@@ -56,13 +56,12 @@ function GenPlyst() {
     function handelClick(qInput){
         console.log("hello")
 
-        //let qInput = 'Duckwrth';
         let tInput = 'track';
         let gInput = 'Rap';
 
         const getTrack = async () => {
 
-            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput + '&type=' + tInput + '&genre=' + gInput + "&limit=30" + '&query=Kendrick' ;
+            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput + '&type=' + tInput + '&genre=' + gInput + "&limit=10" + '&query=Kendrick' ;
             const resultSongs = await fetch(plyListURL, {
                 method: 'GET',
                 headers: {'Authorization': 'Bearer ' + tk}

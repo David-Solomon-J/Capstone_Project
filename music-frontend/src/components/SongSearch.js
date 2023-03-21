@@ -2,6 +2,7 @@ import NavBar from './NavBar'
 import '../styles/songSearch.scss'
 import React, {Component} from 'react';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import NavBarAdm from "./NavBarAdm";
 
 
 class SongSearch extends Component{
@@ -83,12 +84,18 @@ class SongSearch extends Component{
         getTrack();
     }
 
+
+
     render(){
+        let user = JSON.parse(localStorage.getItem("user"));
+
     return(
 
         <>
             <div className="wrapper" id="wrapper">
-                <div id="navBar"><NavBar/></div>
+                {
+                    user.isAdmin ? <NavBarAdm />:<NavBar />
+                }
                     <div className="container" id="bdy">
 
                         <h1>Search: <h5>Use the provided filters to find a track of your prefernce</h5></h1>

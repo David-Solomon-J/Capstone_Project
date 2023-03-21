@@ -20,19 +20,26 @@ function SignIn() {
         console.log("execute");
         event.preventDefault();
 
-        await context.signIn(emailRef.current.value, passwordRef.current.value);
 
-        if(context.currentUser.email != null)
-        {
-            context.setErrors(null, false);
-            navigate("/");
+        await context.signIn(emailRef.current.value, passwordRef.current.value).then(() => {})
+
+        console.log(context.currentUser)
 
         }
-        else {
-            setErrors(context.errors);
-            alert("Incorrect information")
-        }
-        }
+
+        useEffect(()=>{
+            //console.log(context.currentUser)
+            if(Object.keys(context.currentUser).length != 0)
+            {
+                context.setErrors(null, false);
+                navigate("/Home");
+
+            }
+            else {
+                setErrors(context.errors);
+                //alert("Incorrect information")
+            }
+        },[context.currentUser])
 
 
     return (

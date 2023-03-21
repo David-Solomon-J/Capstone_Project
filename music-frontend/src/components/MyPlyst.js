@@ -1,25 +1,26 @@
 import NavBar from './NavBar'
 import '../styles/styles.css'
 import React, {Component, useState} from 'react';
+import NavBarAdm from "./NavBarAdm";
 
 const MyPlyst = () => {
 
     const[name, setName] = useState('David');
+    let user = JSON.parse(localStorage.getItem("user"));
 
-    function handelClick(){
-        setName("David Solomon")
-    }
+    console.log(user.isAdmin);
 
 
     return (
         <>
             <div className="wrapper" id="wrapper">
-                <div id="navBar"><NavBar/></div>
+                {
+                    user.isAdmin ? <NavBarAdm />:<NavBar />
+                }
+
                 <div className="container" id="bdy">
                     <h1>Your playlist</h1>
-                    <h4>Hello my name is { name }</h4>
 
-                   <button onClick={handelClick}>Click Me</button>
                 </div>
 
             </div>
