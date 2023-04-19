@@ -92,7 +92,7 @@ function SignUp() {
 
                                                     <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                                                <Link to="/SignIn">
+                                                <Link to="/">
                                                     <button type="button" className="btn btn-primary btn-lg">Return</button>
                                                 </Link>
                                             </div>

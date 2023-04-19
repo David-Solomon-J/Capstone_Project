@@ -4,7 +4,7 @@ import {initializeApp} from "firebase/app";
 import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { getFirestore } from "firebase/firestore";
+
 
 
 
@@ -127,55 +127,6 @@ export class AuthProvider extends Component {
             // }).catch(err => console.log(err));
         },
 
-        getUsers: async ()=> {
-
-            const firebaseConfig = {
-                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
-                authDomain: "capstoneproj-music.firebaseapp.com",
-                projectId: "capstoneproj-music",
-                storageBucket: "capstoneproj-music.appspot.com",
-                messagingSenderId: "81179338296",
-                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
-            };
-
-                firebase.initializeApp(firebaseConfig);
-                const db = firebase.firestore();
-                let stuff = [], list = [];
-
-
-                const DocumentReference = db.collection("User");
-
-                const Call = async () => {
-                    const snapshot = await DocumentReference.get().then(
-                        res => {
-                            res.forEach(doc => {
-                                //console.log(doc.id, '=>', doc.data());
-                                stuff.push(doc.data())
-                            });
-                            return stuff;
-                        }
-                    );
-
-                    useEffect(() => {
-                        if (snapshot == null) {
-                            console.log('No such document!');
-
-                        } else {
-
-                        }
-                    }, [])
-
-
-                    return snapshot
-                }
-
-                list = await Call();
-
-                console.log(list);
-                console.log(this.allUsers)
-
-        },
-
         getInfo: async (ID)=> {
 
             const firebaseConfig = {
@@ -234,7 +185,47 @@ export class AuthProvider extends Component {
             });
 
         },
+        createPlaylist: async (playlistName, playlistDescription, userId)=>{
 
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+
+
+            const db = firebase.firestore();
+            const playlistCollection = db.collection('Playlist');
+            const userRef = db.collection('User').doc(userId);
+
+
+            // Generate a new document ID
+            const playlistId = playlistCollection.doc().id;
+
+            // Create a new playlist document with the given name and an empty array
+            playlistCollection.doc(playlistId).set({
+                name: playlistName,
+                arrayField: [],
+                description: playlistDescription,
+                id: playlistId,
+            }).then(() => {
+
+                console.log(playlistId);
+
+                userRef.update({
+                    gen_pylists: firebase.firestore.FieldValue.arrayUnion(playlistId)
+                })
+
+                console.log(`Created playlist ${playlistName} with ID ${playlistId} - Description: ${playlistDescription}`);
+            }).catch((error) => {
+                console.error('Error creating playlist: ', error);
+            });
+        },
         signUp: async (email, password)=>{
             const firebaseConfig = {
                 apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
@@ -285,10 +276,10 @@ export class AuthProvider extends Component {
     render() {
 
         const { children } = this.props
-        const {currentUser, allUsers, errors, cart,refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, signUp } = this.state
+        const {currentUser, allUsers, errors, cart,refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, createPlaylist, signUp } = this.state
 
         return (
-            <AuthContext.Provider value={{currentUser, allUsers, errors, cart, refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, signUp}}>
+            <AuthContext.Provider value={{currentUser, allUsers, errors, cart, refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, createPlaylist, signUp}}>
                 {children}
             </AuthContext.Provider>
         );

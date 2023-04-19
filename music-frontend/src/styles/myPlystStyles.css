@@ -1,0 +1,167 @@
+/*#T-level{*/
+/*    background-color: #eee;*/
+/*}*/
+
+/*#C-level{*/
+/*    border-radius: 25px;*/
+/*}*/
+
+/*#navBar {*/
+/*    position: relative;*/
+/*    float: left;*/
+/*}*/
+/*#bdy {*/
+/*    !*margin-left: 5%;*!*/
+/*}*/
+
+/*#homeBdy{*/
+/*    height: 100vh !important;*/
+/*    min-width: 95%;*/
+/*    margin-left: 5%;*/
+/*}*/
+
+/*.inf-content{*/
+/*    border:1px solid #DDDDDD;*/
+/*    -webkit-border-radius:10px;*/
+/*    -moz-border-radius:10px;*/
+/*    border-radius:10px;*/
+/*    box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);*/
+/*}*/
+
+/*#inputName{*/
+/*    display: none;*/
+/*}*/
+
+/*#foot{*/
+/*    position:fixed;*/
+/*    height: 500px;*/
+/*    left:0px;*/
+/*    bottom:0px;*/
+/*    width:100%;*/
+
+/*}*/
+
+/*table.genPlyTbl{*/
+/*    overflow-y:scroll;*/
+/*    height:100vh;*/
+/*    display:block;*/
+/*}*/
+
+/*th, td {*/
+/*    padding-top: 10px;*/
+/*    padding-bottom: 20px;*/
+/*    padding-left: 30px;*/
+/*    padding-right: 40px;*/
+/*}*/
+
+/*audio {*/
+/*    color: #b2bac2;*/
+/*    width: 250px;*/
+/*    height: 50px;*/
+/*}*/
+
+/*#plyListSec{*/
+/*    margin-left: 20vh;*/
+
+/*}*/
+
+/*.rate {*/
+/*    float: left;*/
+/*    height: 46px;*/
+/*    padding: 0 10px;*/
+/*}*/
+/*.rate:not(:checked) > input {*/
+/*    position:absolute;*/
+/*    top:-9999px;*/
+/*}*/
+/*.rate:not(:checked) > label {*/
+/*    float:right;*/
+/*    width:1em;*/
+/*    overflow:hidden;*/
+/*    white-space:nowrap;*/
+/*    cursor:pointer;*/
+/*    font-size:30px;*/
+/*    color:#ccc;*/
+/*}*/
+/*.rate:not(:checked) > label:before {*/
+/*    content: '★ ';*/
+/*}*/
+/*.rate > input:checked ~ label {*/
+/*    color: #ffc700;*/
+/*}*/
+/*.rate:not(:checked) > label:hover,*/
+/*.rate:not(:checked) > label:hover ~ label {*/
+/*    color: #deb217;*/
+/*}*/
+/*.rate > input:checked + label:hover,*/
+/*.rate > input:checked + label:hover ~ label,*/
+/*.rate > input:checked ~ label:hover,*/
+/*.rate > input:checked ~ label:hover ~ label,*/
+/*.rate > label:hover ~ input:checked ~ label {*/
+/*    color: #c59b08;*/
+/*}*/
+
+/* !*Set the body background color *!*/
+/*body {*/
+/*    background-color: #F2F2F2;*/
+/*}*/
+
+/*!* Style the wrapper *!*/
+/*.wrapper {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    min-height: 100vh;*/
+/*}*/
+
+/*!* Style the container *!*/
+/*.container {*/
+/*    max-width: 800px;*/
+/*    margin: auto;*/
+/*    padding: 20px;*/
+/*    background-color: #FFFFFF;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+/*!* Style the heading *!*/
+/*h1 {*/
+/*    margin-top: 0;*/
+/*    font-size: 36px;*/
+/*}*/
+
+/*!* Style the input fields *!*/
+/*input[type="text"], textarea {*/
+/*    display: block;*/
+/*    width: 100%;*/
+/*    padding: 10px;*/
+/*    border: 1px solid #CCCCCC;*/
+/*    border-radius: 5px;*/
+/*    margin-bottom: 20px;*/
+/*    font-size: 16px;*/
+/*}*/
+
+/*!* Style the create button *!*/
+/*button {*/
+/*    background-color: black;*/
+/*    color: #FFFFFF;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    padding: 10px 20px;*/
+/*    font-size: 16px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*button:hover {*/
+/*    background-color: deepskyblue;*/
+/*}*/
+
+/*!* Style the playlist details *!*/
+/*h3, p {*/
+/*    font-size: 18px;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*!* Style the playlist name *!*/
+/*h3 {*/
+/*    margin-top: 30px;*/
+/*}*/
