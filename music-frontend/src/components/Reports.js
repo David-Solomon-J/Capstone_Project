@@ -5,13 +5,15 @@ import React, {Component} from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import {get} from "axios";
+
+
 
 class Reports extends Component {
     //Creates all needed state variables
     constructor(props) {
         super(props);
-        this.state = {playlistList: [], tk: "", songs: [],songCounter: (0),search_Counter: (0), search_value: "Search by artist.." }
+        this.state = {playlistList: [], tk: "", songs: [],songCounter: (0),songCounter2: (0), search_Counter: (0), search_value: "Search by artist..", list: [] }
+
         this.onClick = this.onClick.bind(this)
         this.myFunction = this.myFunction.bind(this)
         this.searchFldButton = this.searchFldButton.bind(this)
@@ -47,6 +49,38 @@ class Reports extends Component {
         }
 
         getToken();
+
+
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const commPlaylistRef = db.collection("Playlist")
+            let songs = [];
+
+            let plyst = commPlaylistRef.get().then(
+                async res => {
+                    res.forEach(doc => {
+
+                        res = doc.data();
+
+                        songs.push(res);
+
+                        //console.log(songs);
+                        this.setState({list: songs});
+
+                    });
+
+                }
+            )
 
 
     }
@@ -219,8 +253,37 @@ class Reports extends Component {
 
         console.log(counter);
         this.setState({songCounter: counter});
+
     }
 
+    myFunction2() {
+
+        // Declare variables
+        let input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput2");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable2");
+        tr = table.getElementsByTagName("tr");
+        let counter = 0;
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    ++counter;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        console.log(counter);
+        this.setState({songCounter2: counter});
+
+    }
 
 
     render() {
@@ -239,10 +302,10 @@ class Reports extends Component {
 
                         <div className="tableBody">
                             <input type="text" id="myInput" onKeyUp={() => this.myFunction()} placeholder={this.state.search_value}/>
-                                <button className="button" onClick={() => this.searchFldButton()}>
+                                <button className="button" id="searchBtn" onClick={() => this.searchFldButton()}>
                                     <ArrowDropDownIcon/>
                                 </button>
-                            <br/>
+                            {/*<br/>*/}
 
                             <div className="counterContainer" id="songCounter">
                                 <h4># of Songs reported: </h4>
@@ -321,6 +384,69 @@ class Reports extends Component {
                             <div>
                                 <button type="button" className="btn btn-primary btn-lg m-lg-6" onClick={this.onClick}>Click</button>
                             </div>
+
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <h1 className="m-3">Playlist Reports</h1>
+                            <input type="text" id="myInput2" onKeyUp={() => this.myFunction2()} placeholder="Date"/>
+                            <div className="counterContainer" id="songCounter">
+                                <h4># of Playlist: </h4>
+                                {
+                                    (this.state.songCounter2 > 0) ? <h4>{this.state.songCounter2}</h4>:""
+                                }
+                            </div>
+
+                            <table id="myTable2" className="table table-striped table-bordered table-sm"
+                                   cellSpacing="0" width="100%">
+
+                                <thead>
+                                <tr>
+
+                                    <th className="th-sm">Date Created
+                                    </th>
+                                    <th className="th-sm">Playlist name
+                                    </th>
+                                    <th className="th-sm">id
+                                    </th>
+                                    <th className="th-sm">Community playlist
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                            {
+                                this.state.list.length > 0 ? this.state.list.map((res)=>{
+
+
+                                    let pub;
+
+                                    if(res.isPublic == true)
+                                        pub = "True"
+                                    else
+                                        pub = "False"
+
+                                    return(
+                                        <>
+                                            <tr>
+
+                                                <td>{res.dateCreated}</td>
+                                                <td>{res.name}</td>
+                                                <td>{res.id}</td>
+                                                <td>{pub}</td>
+
+                                            </tr>
+
+                                        </>
+                                    )
+                                }):""
+                            }
+
+                                </tbody>
+
+                            </table>
+
                         </div>
                     </div>
 

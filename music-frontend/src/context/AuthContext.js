@@ -174,8 +174,6 @@ export class AuthProvider extends Component {
 
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
-
-
             const userRef = db.collection('User');
 
             //Working Set Function!!!!!
@@ -185,7 +183,7 @@ export class AuthProvider extends Component {
             });
 
         },
-        createPlaylist: async (playlistName, playlistDescription, userId)=>{
+        createPlaylist: async (playlistName, playlistDescription, userId, userName)=>{
 
             const firebaseConfig = {
                 apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
@@ -207,12 +205,26 @@ export class AuthProvider extends Component {
             // Generate a new document ID
             const playlistId = playlistCollection.doc().id;
 
+            //Creates Date
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            console.log(formattedDate);
+
+            let comm = [];
+
             // Create a new playlist document with the given name and an empty array
             playlistCollection.doc(playlistId).set({
                 name: playlistName,
                 arrayField: [],
                 description: playlistDescription,
                 id: playlistId,
+                isPublic: false,
+                dateCreated: formattedDate,
+                createdBy: userName,
+                comments: comm,
             }).then(() => {
 
                 console.log(playlistId);

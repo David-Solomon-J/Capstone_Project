@@ -1,5 +1,4 @@
 import NavBar from './NavBar'
-import '../styles/myPlystStyles.css'
 import React, { Component, useState } from 'react';
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -7,6 +6,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import NavBarAdm from './NavBarAdm'
 import ReviewsIcon from '@mui/icons-material/Reviews';
+import PublicIcon from '@mui/icons-material/Public';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 const MyPlyst = () => {
 
@@ -14,78 +15,55 @@ const MyPlyst = () => {
     const [plylists, setPlylists] = useState([]);
     const [playlistName, setPlaylistName] = useState('');
     const [playlistDescription, setPlaylistDescription] = useState('');
-    const [isOpen, setIsOpen] = useState(false);
+    const [counter, setCounter] = useState(0);
 
     let tk = "";
     let user = JSON.parse(localStorage.getItem("user"));
-    let displayPylist = [];
-
 
     let client_id = "4bcd6ab963f844cd984df774aac47791";
     let client_secret = "9c1f076f76c145b4a221386761209322";
 
+    const firebaseConfig = {
+        apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+        authDomain: "capstoneproj-music.firebaseapp.com",
+        projectId: "capstoneproj-music",
+        storageBucket: "capstoneproj-music.appspot.com",
+        messagingSenderId: "81179338296",
+        appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+    };
 
     useEffect(() => {
-        //Creates connection to firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
-            authDomain: "capstoneproj-music.firebaseapp.com",
-            projectId: "capstoneproj-music",
-            storageBucket: "capstoneproj-music.appspot.com",
-            messagingSenderId: "81179338296",
-            appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
-        };
+        async function fetchPlaylists() {
+            // Creates connection to firebase
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const genPylistRef = db.collection("Playlist")
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const genPylistRef = db.collection("Playlist");
+            const list = [];
 
-        for (let i = 0; i < user.gen_pylists.length; ++i) {
-
-            //console.log(user.gen_pylists[i]);
-            if (user.gen_pylists.length == 0) {
-                console.log("No plylist")
-            } else {
-                genPylistRef.doc(user.gen_pylists[i]).get().then((doc) => {
+            for (let i = 0; i < user.gen_pylists.length; ++i) {
+                await genPylistRef.doc(user.gen_pylists[i]).get().then((doc) => {
                     if (doc.exists) {
-
                         // extract data from the snapshot
                         const data = doc.data();
-                        console.log(data);
-                        displayPylist.push(data);
-
-                        console.log(plylists)
-
-                        setPlylists(plylists => [...plylists, data]);
-
-
+                        console.log(data.name);
+                        list.push(data);
                     } else {
                         console.log("No such document!");
                     }
-
                 });
             }
+            console.log("list", list)
+            setPlylists(list);
         }
 
+        fetchPlaylists();
+    }, []);
 
-    },[])
+    useEffect(() => {
+        console.log(plylists);
+    }, [plylists]);
 
-    let tracker = 0;
-
-    if(tracker == 0) {
-        for (let i = 0; i < plylists.length; ++i) {
-
-            for (let j = 1; j < plylists.length; ++j) {
-
-                if (plylists[i].name == plylists[j].name) {
-                    plylists.splice(j, 1);
-                }
-
-            }
-
-        }
-        ++tracker;
-    }
 
     //Async Function (Post method) to get API key
     const getToken = async () => {
@@ -130,16 +108,61 @@ const MyPlyst = () => {
 
         console.log(user.uid)
 
-        context.createPlaylist(playlistName,playlistDescription, user.uid);
+        let userName = user.user_Fname + " " + user.user_Lname;
+
+        context.createPlaylist(playlistName,playlistDescription, user.uid, userName);
     }
+
 
 
     console.log(user);
 
 
-    function addComment(){
-        alert("Add Comment");
+    function addComment(res){
+        let input = window.prompt("Please enter your comment:", "John Doe");
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        db.collection("Playlist").doc(res.id).update({
+            comments: firebase.firestore.FieldValue.arrayUnion(input)
+        }).then(r => {
+            console.log("Comment added");
+        })
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
     }
+
+
+
+    function addPublic(res){
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const makePublicRef = db.collection("Playlist")
+
+        if(res.isPublic == false) {
+            makePublicRef.doc(res.id).update({
+                isPublic: true
+            });
+            alert("This is now a Community playlist, Thanks for sharing!")
+            setTimeout(function() {
+                window.location.href = window.location.href;
+            }, 3000);
+        }
+        else{
+            makePublicRef.doc(res.id).update({
+                isPublic: false
+            });
+            alert("Playlist has been removed from community")
+            setTimeout(function() {
+                window.location.href = window.location.href;
+            }, 3000);
+        }
+
+        console.log(res.isPublic)
+
+    }
+
 
     return (
 
@@ -162,7 +185,7 @@ const MyPlyst = () => {
                     <br/>
                     <br/>
                     <h4>Playlist Name: {playlistName}</h4>
-                    <p>User: {user.uid}</p>
+                    <p>Created By: {user.user_Fname} {user.user_Lname}</p>
                     <p>Playlist Description: {playlistDescription}</p>
 
                     <h1>Your Playlist</h1>
@@ -171,19 +194,54 @@ const MyPlyst = () => {
                     {
                         plylists.length > 0 ? plylists.map((res)=>{
 
+                            // console.log(res.id);
+
+                            let ctr = 0;
+
+                                function nxtComment(x){
+                                    if(counter < x-1)
+                                        setCounter(counter + 1)
+                                    else
+                                        setCounter(0)
+
+                                    ctr = counter
+                                }
+
                                 return(
                                     <div className="col-sm-6">
                                         <div className="card m-3">
-                                            <h5 className="card-title m-3">{res.name}</h5>
+                                            <h4 className="card-title m-3">{res.name}</h4>
                                             <div className="card-text m-4">Description: {res.description}</div>
+                                            <div className="m-1">
 
+                                                <div className="commentSec">
+                                                    <div className="card-text m-lg-3 mt-0">Comments
+                                                        <button id="commentNxtBtn" onClick={() => nxtComment(res.comments.length)}>
+                                                            <NavigateNextIcon/>
+                                                        </button>
+                                                    </div>
+                                                    <div className="card-text m-4">- {
+                                                        res.comments == undefined ? "":res.comments[counter]
+                                                    } </div>
+
+                                                </div>
+                                            </div>
                                             <div className="card-footer m-1">
-                                                <button onClick={() => addComment()}>
+                                                {
+                                                    res.isPublic ?
+                                                        (<button id="isPublicBtnT" onClick={() => addPublic(res)}>
+                                                            <PublicIcon/>
+                                                        </button>)
+                                                        :
+                                                        (<button id="isPublicBtnF" onClick={() => addPublic(res)}>
+                                                            <PublicIcon/>
+                                                        </button>)
+                                                }
+
+                                                <button id="commentBtn" onClick={() => addComment(res)}>
                                                     <ReviewsIcon/>
                                                 </button>
-                                                {/*{*/}
-                                                {/*    isOpen ? <input type="text"/>:""*/}
-                                                {/*}*/}
+
                                             </div>
                                         </div>
                                     </div>

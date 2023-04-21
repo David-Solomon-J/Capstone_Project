@@ -103,7 +103,7 @@ audio {
 
 /* Style the input fields */
 input[type="text"], textarea {
-    display: block;
+    display: inline-block;
     width: 100%;
     padding: 10px;
     border: 1px solid #CCCCCC;
@@ -125,6 +125,72 @@ button {
 
 button:hover {
     background-color: #b2bac2;
+}
+
+#isPublicBtnF {
+    background-color: white;
+    color: rgb(10, 25, 41);
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#isPublicBtnT {
+    background-color: white;
+    color: #b2bac2;
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#commentBtnHome {
+    background-color: white;
+    color: rgb(10, 25, 41);
+    margin-left: 70%;
+}
+
+#commentBtn {
+    background-color: white;
+    color: rgb(10, 25, 41);
+    /*margin-left: 70%;*/
+}
+
+
+#commentNxtBtn {
+    background-color: white;
+    color: rgb(10, 25, 41);
+}
+
+#addBtn{
+    background-color: white;
+    color: rgb(10, 25, 41);
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+#searchBtn{
+    background-color: white;
+    color: rgb(10, 25, 41);
+    display: inline-block;
+    margin-left: auto;
+    margin-right: 0;
+    width: 10px
+}
+
+#searchBtn, #myInput {
+    display: inline-block;
+    width: 50%;
+}
+
+#commentBtn, #isPublicBtnF,  #isPublicBtnT{
+    display: inline-block;
+    width: 50%;
+}
+
+#myTable {
+    overflow: auto;
+    /*max-height: 300px;*/
 }
 
 /* Style the playlist details */

@@ -4,16 +4,37 @@ import '../styles/styles.css'
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from "../context/AuthContext";
 import EditIcon from '@mui/icons-material/Edit';
+import ReviewsIcon from "@mui/icons-material/Reviews";
+import AddIcon from '@mui/icons-material/Add';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import CloseIcon from '@mui/icons-material/Close';
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 function Home() {
 
     const context = useContext(AuthContext)
     const[plylist, setPlylist] = useState([])
+    const[coPlaylist, setCoPlaylist] = useState([]);
+    const [counter, setCounter] = useState(0);
 
     let tk = "";
+    let user = JSON.parse(localStorage.getItem("user"));
 
     let client_id = "4bcd6ab963f844cd984df774aac47791";
     let client_secret = "9c1f076f76c145b4a221386761209322";
+    const firebaseConfig = {
+        apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+        authDomain: "capstoneproj-music.firebaseapp.com",
+        projectId: "capstoneproj-music",
+        storageBucket: "capstoneproj-music.appspot.com",
+        messagingSenderId: "81179338296",
+        appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const userRef = db.collection("User")
 
     useEffect(()=>{
         let user = JSON.parse(localStorage.getItem("user"));
@@ -90,7 +111,103 @@ function Home() {
 
     },[])
 
-    console.log(plylist);
+    //console.log(plylist);
+
+    useEffect(() => {
+    const firebaseConfig = {
+        apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+        authDomain: "capstoneproj-music.firebaseapp.com",
+        projectId: "capstoneproj-music",
+        storageBucket: "capstoneproj-music.appspot.com",
+        messagingSenderId: "81179338296",
+        appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const commPlaylistRef = db.collection("Playlist")
+    let songs = [];
+
+    let plyst = commPlaylistRef.get().then(
+        async res => {
+            res.forEach(doc => {
+
+                res = doc.data();
+
+
+                if(res.isPublic == true){
+
+                    songs.push(res);
+
+                }
+
+                //console.log(songs);
+                setCoPlaylist(songs);
+
+            });
+
+        }
+    )
+    },[])
+
+
+    function addPlaylist(res){
+
+        userRef.doc(user.uid).update({
+            gen_pylists: firebase.firestore.FieldValue.arrayUnion(res.id)
+        }).then(r => {
+            console.log("added");
+        })
+
+        alert("Playlist has been added from your personal catalog");
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
+
+    }
+
+    function removePlaylist(res){
+
+        userRef.doc(user.uid).update({
+            gen_pylists: firebase.firestore.FieldValue.arrayRemove(res.id)
+        }).then(r => {
+            console.log("Removed");
+        })
+
+        alert("Playlist has been removed from your personal catalog");
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
+    }
+
+    function checkIfUserHas(x){
+        let checker = false;
+
+        for(let i = 0; i < user.gen_pylists.length; ++i){
+            if(x == user.gen_pylists[i]){
+                checker = true;
+            }
+        }
+
+        return checker;
+
+    }
+
+    function addComment(res){
+        let input = window.prompt("Please enter your comment:", "John Doe");
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        db.collection("Playlist").doc(res.id).update({
+            comments: firebase.firestore.FieldValue.arrayUnion(input)
+        }).then(r => {
+            console.log("Comment added");
+        })
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
+    }
+
         return (
             <>
                 <div className="wrapper" id="wrapper">
@@ -244,6 +361,89 @@ function Home() {
 
                                     })
 
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2>Community Playlist</h2>
+
+                            <div className="row">
+                                {
+                                    coPlaylist.length > 0 ? coPlaylist.map((res)=>{
+
+                                            //console.log(res.id);
+                                            let userHasPly = false;
+
+                                            userHasPly = checkIfUserHas(res.id);
+
+                                            console.log(userHasPly)
+
+                                            let ctr = 0;
+                                            // let commLength;
+                                            //
+                                            //
+                                            // if(typeof(res.comments) !== undefined)
+                                            //     console.log(res.comments)
+                                            // else
+                                            //     console.log(0);
+
+
+
+                                            function nxtComment(x){
+                                                if(counter < x-1)
+                                                    setCounter(counter + 1)
+                                                else
+                                                    setCounter(0)
+
+                                                ctr = counter
+                                            }
+
+                                            // console.log(res.comments == undefined)
+                                            return(
+                                                <div className="col-sm-6">
+                                                    <div className="card m-3">
+                                                        <h5 className="card-title m-3">{res.name}</h5>
+                                                        <div className="card-text m-4">Description: {res.description}</div>
+                                                        <div className="m-1">
+
+                                                            <div className="commentSec">
+                                                                <div className="card-text m-lg-3 mt-0">Comments
+                                                                    <button id="commentNxtBtn" onClick={() => nxtComment(res.comments.length)}>
+                                                                        <NavigateNextIcon/>
+                                                                    </button>
+                                                                    <button id="commentBtnHome" onClick={() => addComment(res)}>
+                                                                        <ReviewsIcon/>
+                                                                    </button>
+                                                                </div>
+                                                                <div className="card-text m-4">- {
+                                                                    res.comments == undefined ? "":res.comments[counter]
+                                                                } </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div className="card-footer m-1">
+                                                            {
+                                                                userHasPly ?
+                                                                    (<button id="addBtn" onClick={() => removePlaylist(res)}>
+                                                                        <CloseIcon/>
+                                                                    </button>)
+                                                                    :
+                                                                    (<button id="addBtn" onClick={() => addPlaylist(res)}>
+                                                                        <AddIcon/>
+                                                                    </button>)
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            )
+
+                                        })
+                                        :
+                                        ""
                                 }
                             </div>
                         </div>

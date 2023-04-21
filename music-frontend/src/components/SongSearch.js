@@ -1,7 +1,7 @@
 import NavBar from './NavBar'
 import '../styles/songSearch.scss'
 import React, {Component} from 'react';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import AddIcon from '@mui/icons-material/Add';
 import NavBarAdm from "./NavBarAdm";
 
 
@@ -89,6 +89,10 @@ class SongSearch extends Component{
     render(){
         let user = JSON.parse(localStorage.getItem("user"));
 
+        function addSong(res){
+
+        }
+
     return(
 
         <>
@@ -127,6 +131,10 @@ class SongSearch extends Component{
                                                                 controls
                                                                 src={audioUrl}>
                                                             </audio>
+                                                     <button id="addBtn" onClick={() => addSong(song)}>
+                                                        <AddIcon/>
+
+                                                    </button>
 
                                                     </div>
 

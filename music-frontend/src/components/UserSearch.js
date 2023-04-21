@@ -5,6 +5,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from "../context/AuthContext";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 
 
@@ -12,6 +13,8 @@ import 'firebase/compat/firestore';
 function UserSearch() {
 
     const[myList, setList] = useState([]);
+    const[search_value, setSearchValue] = useState("Search by Name...");
+    const[songCounter, setSongCounter] = useState(0);
 
     useEffect(() => {
         const getUsers = async () => {
@@ -60,6 +63,49 @@ function UserSearch() {
     const context = useContext(AuthContext);
     let isAdm = true;
 
+    //Filters and updates table according to query
+    function myFunction() {
+
+        // Declare variables
+        let input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        let counter = 0;
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    ++counter;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        console.log(counter);
+        setSongCounter(counter);
+
+    }
+
+
+    //Functionallity for alternating search param
+    function searchFldButton() {
+
+        let options = ["Search by Name...", "Search by ID..."];
+
+        setSongCounter(songCounter + 1)
+        setSearchValue(options[songCounter])
+
+        if (songCounter >= 1) {
+            setSongCounter(0)
+        }
+    }
 
         return (
             <>
@@ -68,33 +114,66 @@ function UserSearch() {
                         isAdm ? <NavBarAdm />:<NavBar />
                     }
                     <div className="container" id="bdy">
-                        <h1>User Search</h1>
-                        <h3></h3>
+                        <h2>Users Reports</h2>
+                        <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
+                        <button className="button" id="searchBtn" onClick={() => searchFldButton()}>
+                            <ArrowDropDownIcon/>
+                        </button>
+                    <table id="myTable" className="table table-striped table-bordered table-sm"
+                           cellSpacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            {
+                                 songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>
+                            }
+                            {/*<th className="th-sm">Name*/}
+                            {/*</th>*/}
+                            {/*<th className="th-sm">User ID*/}
+                            {/*</th>*/}
+                            <th className="th-sm">Email
+                            </th>
+                            <th className="th-sm">Is Admin
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
                         {
+
                             myList.length > 0 ?myList.map(res => {
-                                // console.log(res);
-                                // let addr = encodeURIComponent(apt.address)
-                                let admin="";
+
+                                let admin;
 
                                 res.isAdmin ? admin = "True":admin = "False"
 
-                                return (
-                                    <tr>
-                                        <td>{res.user_Fname}</td>
-                                        <td>{res.user_Lname}</td>
-                                        <td>{res.uid}</td>
-                                        <td>{res.user_email}</td>
-                                        <td>{admin}</td>
-                                        {/*<td><button classname="Likes" type="button" onClick={(event) => this.insert(event,apt.property_id)}>Likes</button></td>*/}
+                                return(
+                                    <>
+                                        <tr>
+                                            {
+                                                songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>
+                                            }
+                                            {/*<td>{res.user_Fname} {res.user_Lname}</td>*/}
+                                            {/*<td>{res.uid}</td>*/}
+                                            <td>{res.user_email}</td>
+                                            <td>{admin}</td>
 
+                                        </tr>
 
-                                    </tr>
+                                    </>
                                 )
-                            }):
-                                "Loading"
-                        }
-                    </div>
 
+                            }): ""
+
+
+                        }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
                 </div>
             </>
         );
