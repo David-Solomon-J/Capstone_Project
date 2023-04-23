@@ -14,7 +14,7 @@ function UserSearch() {
 
     const[myList, setList] = useState([]);
     const[search_value, setSearchValue] = useState("Search by Name...");
-    const[songCounter, setSongCounter] = useState(0);
+    const[songCounter, setSongCounter] = useState(1);
 
     useEffect(() => {
         const getUsers = async () => {
@@ -115,21 +115,27 @@ function UserSearch() {
                     }
                     <div className="container" id="bdy">
                         <h2>Users Reports</h2>
-                        <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
-                        <button className="button" id="searchBtn" onClick={() => searchFldButton()}>
-                            <ArrowDropDownIcon/>
-                        </button>
+
+
+                        <div className="tableBody">
+                            <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
+                            <button className="button" id="searchBtn" onClick={() => searchFldButton()}>
+                                <ArrowDropDownIcon/>
+                            </button>
+
+
                     <table id="myTable" className="table table-striped table-bordered table-sm"
                            cellSpacing="0" width="100%">
                         <thead>
                         <tr>
-                            {
-                                 songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>
-                            }
-                            {/*<th className="th-sm">Name*/}
-                            {/*</th>*/}
-                            {/*<th className="th-sm">User ID*/}
-                            {/*</th>*/}
+                            {/*{*/}
+                            {/*     songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>*/}
+                            {/*}*/}
+                            <th className="th-sm">User ID
+                            </th>
+                            <th className="th-sm">Name
+                            </th>
+
                             <th className="th-sm">Email
                             </th>
                             <th className="th-sm">Is Admin
@@ -138,7 +144,6 @@ function UserSearch() {
                         </tr>
                         </thead>
                         <tbody>
-
 
                         {
 
@@ -151,11 +156,11 @@ function UserSearch() {
                                 return(
                                     <>
                                         <tr>
-                                            {
-                                                songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>
-                                            }
-                                            {/*<td>{res.user_Fname} {res.user_Lname}</td>*/}
-                                            {/*<td>{res.uid}</td>*/}
+                                            {/*{*/}
+                                            {/*    songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>*/}
+                                            {/*}*/}
+                                            <td>{res.uid}</td>
+                                            <td>{res.user_Fname} {res.user_Lname}</td>
                                             <td>{res.user_email}</td>
                                             <td>{admin}</td>
 
@@ -173,6 +178,9 @@ function UserSearch() {
                         </tbody>
 
                     </table>
+                        </div>
+
+
                 </div>
                 </div>
             </>

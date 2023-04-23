@@ -16,8 +16,10 @@ const MyPlyst = () => {
     const [playlistName, setPlaylistName] = useState('');
     const [playlistDescription, setPlaylistDescription] = useState('');
     const [counter, setCounter] = useState(0);
+    const [rate, setRate] = useState(0);
+    const [inputValue, setInputValue] = useState("");
+    const [tk, setTk] = useState("");
 
-    let tk = "";
     let user = JSON.parse(localStorage.getItem("user"));
 
     let client_id = "4bcd6ab963f844cd984df774aac47791";
@@ -46,14 +48,14 @@ const MyPlyst = () => {
                     if (doc.exists) {
                         // extract data from the snapshot
                         const data = doc.data();
-                        console.log(data.name);
+                        //console.log(data.name);
                         list.push(data);
                     } else {
-                        console.log("No such document!");
+                        //console.log("No such document!");
                     }
                 });
             }
-            console.log("list", list)
+            //console.log("list", list)
             setPlylists(list);
         }
 
@@ -61,10 +63,11 @@ const MyPlyst = () => {
     }, []);
 
     useEffect(() => {
-        console.log(plylists);
+        //console.log(plylists);
     }, [plylists]);
 
 
+    useEffect(() => {
     //Async Function (Post method) to get API key
     const getToken = async () => {
         //Fetch using spotify base URL and headers containing client id & secret
@@ -84,15 +87,16 @@ const MyPlyst = () => {
     }
 
     let assignTK = (x) => {
-        //setTk(x)
-        tk = x;
-        //console.log(tk);
+        setTk(x)
 
+        // console.log("Tk:" + tk);
         //getTracks(x);
+
         return tk;
     }
-    getToken();
 
+    getToken().then();
+    }, []);
 
     function HandleClick() {
         // Get the playlist name input field
@@ -115,7 +119,7 @@ const MyPlyst = () => {
 
 
 
-    console.log(user);
+    //console.log(user);
 
 
     function addComment(res){
@@ -163,6 +167,48 @@ const MyPlyst = () => {
 
     }
 
+    function ratePlaylist(res, num){
+
+        const rating = document.querySelector('#rating');
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const makePublicRef = db.collection("Playlist")
+
+
+
+        if((rating.value > 5 || rating.value < 0) || num === "")
+            alert("Please enter proper value")
+        else {
+
+            console.log(rating.value)
+
+            let x = parseInt(num);
+            let y = parseInt(res.rating);
+
+            console.log(typeof x);  // outputs "number"
+            console.log(typeof y);  // outputs "string"
+
+            let newRate = (x + y)/2;
+
+            makePublicRef.doc(res.id).update({
+                rating: newRate
+            }).then();
+
+            alert("Thanks for rating!")
+            setTimeout(function() {
+                window.location.href = window.location.href;
+            }, 3000);
+
+            // console.log(newRate + " + " + x + " + " + y + " + /2" )
+
+
+        }
+
+    }
+
+    function handleInputChange(event) {
+        setInputValue(event.target.value);
+    }
 
     return (
 
@@ -194,9 +240,39 @@ const MyPlyst = () => {
                     {
                         plylists.length > 0 ? plylists.map((res)=>{
 
-                            // console.log(res.id);
+                                let tracks = [];
 
-                            let ctr = 0;
+                                    // Wrap the loop in an async function to use async/await
+                                const fetchTracks = async () => {
+                                    // Use Promise.all() with Array.map() to fetch track data for each song
+                                    await Promise.all(res.songs.map(async (id) => {
+                                        const plyListURL = 'https://api.spotify.com/v1/tracks/' + id;
+                                        const resultSongs = await fetch(plyListURL, {
+                                            method: 'GET',
+                                            headers: {'Authorization': 'Bearer ' + tk}
+                                        })
+                                            .then(res => res.json())
+                                            .then(res => {
+                                                tracks.push(res);
+                                            });
+                                    }));
+
+                                    // At this point, all track data should be fetched and pushed into the tracks array
+                                    console.log(tracks);
+                                    // Further processing of the tracks array can be done here
+                                }
+
+                                fetchTracks();
+
+                                // Create an array of track names using `Array.map()`
+                                const trackNames = tracks.map((track) => track.name);
+
+                                // Log the array of track names to the console
+                                console.log(trackNames);
+
+
+
+                                let ctr = 0;
 
                                 function nxtComment(x){
                                     if(counter < x-1)
@@ -206,6 +282,9 @@ const MyPlyst = () => {
 
                                     ctr = counter
                                 }
+
+
+
 
                                 return(
                                     <div className="col-sm-6">
@@ -226,6 +305,55 @@ const MyPlyst = () => {
 
                                                 </div>
                                             </div>
+
+                                            <div className="card-text m-lg-3 mt-0">Rating (0-5)
+                                                <input className="m-3" type="number" id="rating" name="rating"  min="0" max="5" text="muted"
+                                                       pattern="[0-5]*" onChange={handleInputChange}></input>
+                                                <button id="rateBtn" onClick={() => ratePlaylist(res, inputValue)}>Rate</button>
+
+                                                <div className="card-text m-4"> Playlist Rating: {res.rating} </div>
+
+                                            </div>
+
+                                            <div className="card-text m-lg-3 mt-0">Playlist songs
+
+                                                <div className="table-wrapper">
+                                                    <table  id="pyTable">
+                                                        <thead>
+                                                        <tr>
+                                                            <th id="tHeadI">Artist</th>
+                                                            <th id= "tHeadI">Song Name</th>
+                                                            <th id="tHeadI">Album</th>
+                                                            <th id="tHeadI">Snippit</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        {
+
+                                                            tracks.length > 0 ? tracks.map((res)=>{
+
+                                                                console.log("Hey")
+                                                                console.log(res)
+                                                                return(
+                                                                <tr>
+                                                                    <td id="tItems">Value 1</td>
+                                                                    <td id="tItems">Value 2</td>
+                                                                    <td id="tItems">Value 3</td>
+                                                                    <td id="tItems">Value 4</td>
+                                                                </tr>
+                                                                )
+                                                            }):""
+                                                        }
+
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
                                             <div className="card-footer m-1">
                                                 {
                                                     res.isPublic ?
@@ -241,6 +369,7 @@ const MyPlyst = () => {
                                                 <button id="commentBtn" onClick={() => addComment(res)}>
                                                     <ReviewsIcon/>
                                                 </button>
+
 
                                             </div>
                                         </div>

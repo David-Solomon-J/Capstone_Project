@@ -390,7 +390,7 @@ class Reports extends Component {
                             <br/>
 
                             <h1 className="m-3">Playlist Reports</h1>
-                            <input type="text" id="myInput2" onKeyUp={() => this.myFunction2()} placeholder="Date"/>
+                            <input type="text" id="myInput2" onKeyUp={() => this.myFunction2()} placeholder="Date in the format 'YYYY-MM-DD'"/>
                             <div className="counterContainer" id="songCounter">
                                 <h4># of Playlist: </h4>
                                 {

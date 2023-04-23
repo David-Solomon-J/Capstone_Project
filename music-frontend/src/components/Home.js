@@ -10,6 +10,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import DeleteIcon from '@mui/icons-material/Delete';
+import "firebase/compat/auth";
 
 function Home() {
 
@@ -17,6 +19,7 @@ function Home() {
     const[plylist, setPlylist] = useState([])
     const[coPlaylist, setCoPlaylist] = useState([]);
     const [counter, setCounter] = useState(0);
+    const [inputValue, setInputValue] = useState("");
 
     let tk = "";
     let user = JSON.parse(localStorage.getItem("user"));
@@ -183,9 +186,11 @@ function Home() {
     function checkIfUserHas(x){
         let checker = false;
 
-        for(let i = 0; i < user.gen_pylists.length; ++i){
-            if(x == user.gen_pylists[i]){
-                checker = true;
+        if(user.gen_pylists != undefined) {
+            for (let i = 0; i < user.gen_pylists.length; ++i) {
+                if (x == user.gen_pylists[i]) {
+                    checker = true;
+                }
             }
         }
 
@@ -206,6 +211,71 @@ function Home() {
         setTimeout(function() {
             window.location.href = window.location.href;
         }, 3000);
+    }
+
+    function ratePlaylist(res, num){
+
+        const rating = document.querySelector('#rating');
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const makePublicRef = db.collection("Playlist")
+
+
+
+        if((rating.value > 5 || rating.value < 0) || num === "")
+            alert("Please enter proper value")
+        else {
+
+            console.log(rating.value)
+
+            let x = parseInt(num);
+            let y = parseInt(res.rating);
+
+            console.log(typeof x);  // outputs "number"
+            console.log(typeof y);  // outputs "string"
+
+            let newRate = (x + y)/2;
+
+            makePublicRef.doc(res.id).update({
+                rating: newRate
+            }).then();
+
+            alert("Thanks for rating!")
+            setTimeout(function() {
+                window.location.href = window.location.href;
+            }, 3000);
+
+            // console.log(newRate + " + " + x + " + " + y + " + /2" )
+
+
+        }
+
+    }
+
+    function handleInputChange(event) {
+        setInputValue(event.target.value);
+    }
+
+
+    function delAct(){
+        let user = firebase.auth().currentUser;
+
+        userRef.doc(user.uid).delete()
+            .then(() => {
+
+            })
+            .catch((error) => {
+
+            });
+
+        user.delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+
+        window.location.href = '/';
+
     }
 
         return (
@@ -312,6 +382,11 @@ function Home() {
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <button id="delAct" onClick={() => delAct()}>
+                                        <DeleteIcon/>
+                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +396,7 @@ function Home() {
                         <div className="containerPlylist">
                             <div className="row m-lg-2">
                                 {
-                                    plylist.map((playlist)=>{
+                                    plylist != undefined ? plylist.map((playlist)=>{
                                         //Button to add playlist ID to DB
                                         let iurl = ""
                                         if(playlist.images)
@@ -359,7 +434,7 @@ function Home() {
                                             </div>
                                         )
 
-                                    })
+                                    }):""
 
                                 }
                             </div>
@@ -377,7 +452,7 @@ function Home() {
 
                                             userHasPly = checkIfUserHas(res.id);
 
-                                            console.log(userHasPly)
+                                            // console.log(userHasPly)
 
                                             let ctr = 0;
                                             // let commLength;
@@ -421,6 +496,19 @@ function Home() {
                                                                 } </div>
 
                                                             </div>
+
+                                                        </div>
+
+                                                        <div className="card-text m-lg-3 mt-0">Rating (0-5)
+                                                            <input className="m-3" type="number" id="rating"
+                                                                   name="rating" min="0" max="5" text="muted"
+                                                                   pattern="[0-5]*" onChange={handleInputChange}></input>
+                                                            <button id="rateBtn"
+                                                                    onClick={() => ratePlaylist(res, inputValue)}>Rate
+                                                            </button>
+
+                                                            <div className="card-text m-4"> Playlist
+                                                                Rating: {res.rating} </div>
 
                                                         </div>
 

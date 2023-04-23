@@ -193,6 +193,10 @@ button:hover {
     /*max-height: 300px;*/
 }
 
+#rating{
+    width: 5vh;
+}
+
 /* Style the playlist details */
 h3, p {
     font-size: 18px;
@@ -204,3 +208,39 @@ h3 {
     margin-top: 30px;
 }
 
+
+.table-wrapper {
+    max-height: 200px; /* set maximum height for table */
+    overflow-y: auto; /* add vertical scrollbar when table exceeds max height */
+    border: 1px solid transparent; /* add transparent border */
+}
+
+#pyTable {
+    border-collapse: collapse; /* merge borders between cells */
+    width: 100%; /* set table width to 100% of container */
+}
+
+#tHeadI,
+#tItems {
+    border: 1px solid transparent; /* add transparent border to cells */
+    padding: 10px; /* add padding to cells */
+}
+
+#tHeadI {
+    background-color: #eee; /* add background color to header cells */
+    position: sticky; /* make header cells sticky */
+    top: 0; /* stick header cells to top of container */
+}
+
+#messageSn, #sendMsg{
+    display: inline-block;
+}
+#messageSn {
+    display: inline-block;
+    width: 80%;
+}
+
+#sendMsg {
+    display: inline-block;
+    width: 20%;
+}
