@@ -128,9 +128,9 @@ function UserSearch() {
                            cellSpacing="0" width="100%">
                         <thead>
                         <tr>
-                            {/*{*/}
-                            {/*     songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>*/}
-                            {/*}*/}
+                            {
+                                 songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>
+                            }
                             <th className="th-sm">User ID
                             </th>
                             <th className="th-sm">Name
@@ -156,9 +156,9 @@ function UserSearch() {
                                 return(
                                     <>
                                         <tr>
-                                            {/*{*/}
-                                            {/*    songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>*/}
-                                            {/*}*/}
+                                            {
+                                                songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>
+                                            }
                                             <td>{res.uid}</td>
                                             <td>{res.user_Fname} {res.user_Lname}</td>
                                             <td>{res.user_email}</td>
