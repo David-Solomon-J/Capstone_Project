@@ -8,6 +8,7 @@ import NavBarAdm from './NavBarAdm'
 import ReviewsIcon from '@mui/icons-material/Reviews';
 import PublicIcon from '@mui/icons-material/Public';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import PlyTable from './PlyTable'
 
 const MyPlyst = () => {
 
@@ -240,36 +241,42 @@ const MyPlyst = () => {
                     {
                         plylists.length > 0 ? plylists.map((res)=>{
 
-                                let tracks = [];
-
-                                    // Wrap the loop in an async function to use async/await
-                                const fetchTracks = async () => {
-                                    // Use Promise.all() with Array.map() to fetch track data for each song
-                                    await Promise.all(res.songs.map(async (id) => {
-                                        const plyListURL = 'https://api.spotify.com/v1/tracks/' + id;
-                                        const resultSongs = await fetch(plyListURL, {
-                                            method: 'GET',
-                                            headers: {'Authorization': 'Bearer ' + tk}
-                                        })
-                                            .then(res => res.json())
-                                            .then(res => {
-                                                tracks.push(res);
-                                            });
-                                    }));
-
-                                    // At this point, all track data should be fetched and pushed into the tracks array
-                                    console.log(tracks);
-                                    // Further processing of the tracks array can be done here
-                                }
-
-                                fetchTracks();
-
-                                // Create an array of track names using `Array.map()`
-                                const trackNames = tracks.map((track) => track.name);
-
-                                // Log the array of track names to the console
-                                console.log(trackNames);
-
+                                // let tracks = [];
+                                //
+                                //     // Wrap the loop in an async function to use async/await
+                                // const fetchTracks = async () => {
+                                //     // Use Promise.all() with Array.map() to fetch track data for each song
+                                //     //console.log(res.songs)
+                                //     if(res.songs != undefined) {
+                                //         await Promise.all(res.songs.map(async (id) => {
+                                //             const plyListURL = 'https://api.spotify.com/v1/tracks/' + id;
+                                //             const resultSongs = await fetch(plyListURL, {
+                                //                 method: 'GET',
+                                //                 headers: {'Authorization': 'Bearer ' + tk}
+                                //             })
+                                //                 .then(res => res.json())
+                                //                 .then(res => {
+                                //                     //console.log(res)
+                                //                     tracks.push(res);
+                                //                 });
+                                //         }));
+                                //     }
+                                //
+                                //     // At this point, all track data should be fetched and pushed into the tracks array
+                                //     console.log(tracks);
+                                //     // Further processing of the tracks array can be done here
+                                //
+                                // }
+                                //
+                                // fetchTracks();
+                                //
+                                // console.log(tracks)
+                                //
+                                // // Create an array of track names using `Array.map()`
+                                // const trackNames = tracks.map((track) => track.name);
+                                //
+                                // // Log the array of track names to the console
+                                // console.log(trackNames);
 
 
                                 let ctr = 0;
@@ -318,38 +325,10 @@ const MyPlyst = () => {
                                             <div className="card-text m-lg-3 mt-0">Playlist songs
 
                                                 <div className="table-wrapper">
-                                                    <table  id="pyTable">
-                                                        <thead>
-                                                        <tr>
-                                                            <th id="tHeadI">Artist</th>
-                                                            <th id= "tHeadI">Song Name</th>
-                                                            <th id="tHeadI">Album</th>
-                                                            <th id="tHeadI">Snippit</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        {
-
-                                                            tracks.length > 0 ? tracks.map((res)=>{
-
-                                                                console.log("Hey")
-                                                                console.log(res)
-                                                                return(
-                                                                <tr>
-                                                                    <td id="tItems">Value 1</td>
-                                                                    <td id="tItems">Value 2</td>
-                                                                    <td id="tItems">Value 3</td>
-                                                                    <td id="tItems">Value 4</td>
-                                                                </tr>
-                                                                )
-                                                            }):""
-                                                        }
-
-
-
-                                                        </tbody>
-                                                    </table>
+                                                    {
+                                                        res.songs != undefined ?
+                                                        <PlyTable songs={res.songs} tk={tk}/> : ""
+                                                    }
                                                 </div>
 
                                             </div>

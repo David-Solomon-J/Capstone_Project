@@ -5,9 +5,6 @@ import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} fro
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-
-//
-
 export const AuthContext = React.createContext({
     currentUser: {},
     allUsers: {},
@@ -238,7 +235,7 @@ export class AuthProvider extends Component {
                 console.error('Error creating playlist: ', error);
             });
         },
-        signUp: async (email, password)=>{
+        signUp: async (email, password) => {
             const firebaseConfig = {
                 apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
                 authDomain: "capstoneproj-music.firebaseapp.com",
@@ -249,26 +246,46 @@ export class AuthProvider extends Component {
             };
 
             // Initialize Firebase
-            initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
 
             const auth = getAuth();
-            let flag = false;
 
             await createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     // Signed in
-                    const user = userCredential.user;
+                    let user = userCredential.user;
 
-                    // ...
-                    flag = true;
+                    console.log("cred_user", user)
+                    let res = await user.getIdTokenResult(false);
+
+                    this.state.setCurrentUser(user);
+                    localStorage.setItem("user", JSON.stringify(this.state.currentUser));
+
+
+                    let token = res.token;
+                    localStorage.setItem("firebaseResponse", JSON.stringify(res));
+
+                    const db = firebase.firestore();
+                    const userCollection = db.collection('User');
+                    const userId = user.uid; // Get the user ID from the user object
+
+                    await userCollection.doc(userId).set({
+                        gen_pylists: [],
+                        isAdmin: false,
+                        isActive: true,
+                        uid: userId,
+                        user_Fname: "",
+                        user_Lname: "",
+                        user_email: email,
+                        user_plyst: [],
+                    });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    //this.state.setErrors(error.response.data, false);
-                    // ..
+                    alert(errorCode);
+                    alert(errorMessage);
                 });
-            return flag;
         },
 
     }

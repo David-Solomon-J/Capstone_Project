@@ -441,7 +441,7 @@ function Home() {
                         </div>
 
                         <div>
-                            <h2>Community Playlist</h2>
+                            <h2>Public Playlist</h2>
 
                             <div className="row">
                                 {

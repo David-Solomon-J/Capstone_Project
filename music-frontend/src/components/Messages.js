@@ -1,11 +1,13 @@
 import NavBar from './NavBar'
 import '../styles/styles.css'
 import React, {useContext, useEffect, useState} from 'react';
+import Msg from "../components/MesTable"
 import {AuthContext} from "../context/AuthContext";
 import NavBarAdm from "./NavBarAdm";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import SendIcon from '@mui/icons-material/Send';
+
 
 function Messages() {
 
@@ -49,7 +51,7 @@ function Messages() {
                 const updatedConversations = [...conversations];
                 updatedConversations.push(data);
                 setCon(updatedConversations);
-                console.log(updatedConversations);
+                //console.log(updatedConversations);
             } else {
                 console.log("No such document!");
             }
@@ -139,25 +141,25 @@ function Messages() {
                                 {
                                     user.convos != undefined ? user.convos.map((res) => {
 
-                                        let dataFill;
+
                                         let data;
 
                                         async function getInfo() {
                                             data = await fillConCard(res);
-                                            //console.log(data)
+                                            console.log(data)
                                             return data;
                                         }
 
                                         data = getInfo()
 
-                                        //console.log(data)
-
                                         return (
                                             <div className="card m-2" type="button" onClick={() => ConCard(res)}>
-                                                <div className="card-body">
-                                                    <h5 className="card-title">Name: {}</h5>
-                                                    <p className="card-text">Some text here</p>
-                                                </div>
+                                                {/*<div className="card-body">*/}
+                                                {/*    <h5 className="card-title">Name: {}</h5>*/}
+                                                {/*    <p className="card-text">Some text here</p>*/}
+                                                {/*</div>*/}
+
+                                                <Msg id={res}/>
                                             </div>
                                         )
                                     }):""

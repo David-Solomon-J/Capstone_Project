@@ -13,8 +13,9 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 function UserSearch() {
 
     const[myList, setList] = useState([]);
+    const[fullList, setFullList] = useState([]);
     const[search_value, setSearchValue] = useState("Search by Name...");
-    const[songCounter, setSongCounter] = useState(1);
+    const[songCounter, setSongCounter] = useState(0);
 
     useEffect(() => {
         const getUsers = async () => {
@@ -52,6 +53,7 @@ function UserSearch() {
             list = await Call();
 
             setList(list);
+            setFullList(list);
 
             console.log(list);
 
@@ -74,9 +76,10 @@ function UserSearch() {
         tr = table.getElementsByTagName("tr");
         let counter = 0;
 
+
         // Loop through all table rows, and hide those who don't match the search query
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
+        /*for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
             if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -86,11 +89,24 @@ function UserSearch() {
                     tr[i].style.display = "none";
                 }
             }
-        }
+        }*/
 
-        console.log(counter);
-        setSongCounter(counter);
+        let list = fullList.filter((elm)=>{
+            console.log(songCounter)
+            if(songCounter == 0) {
+                if (elm.user_Fname.toUpperCase().indexOf(filter) > -1)
+                    return elm;
+            }
+            else
+            {
+                if (elm.uid.toUpperCase().indexOf(filter) > -1)
+                    return elm;
+            }
+        })
+        setList(list)
 
+        //console.log(counter);
+        // setSongCounter(counter);
     }
 
 
@@ -99,12 +115,36 @@ function UserSearch() {
 
         let options = ["Search by Name...", "Search by ID..."];
 
-        setSongCounter(songCounter + 1)
-        setSearchValue(options[songCounter])
-
         if (songCounter >= 1) {
             setSongCounter(0)
         }
+        else{
+            setSongCounter(songCounter + 1)
+        }
+
+        console.log(songCounter)
+        setSearchValue(options[songCounter])
+    }
+
+
+
+    function handleChange() {
+        const dropdown = document.getElementById("dropdown");
+        const selectedValue = dropdown.value;
+        console.log("Selected value:", selectedValue);
+        let options = ["Search by ID...","Search by Name..."];
+        // Do something with the selected value here
+
+        if(selectedValue == "name"){
+            setSongCounter(0)
+        }
+
+        if(selectedValue == "ID"){
+            setSongCounter(1)
+        }
+
+        setSearchValue(options[songCounter])
+
     }
 
         return (
@@ -119,26 +159,28 @@ function UserSearch() {
 
                         <div className="tableBody">
                             <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
-                            <button className="button" id="searchBtn" onClick={() => searchFldButton()}>
-                                <ArrowDropDownIcon/>
-                            </button>
+
+                            <br/>
+                            <label htmlFor="dropdown">Search by:</label>
+                            <select id="dropdown" onChange={() => handleChange()}>
+                                <option value="name">Name</option>
+                                <option value="ID">ID</option>
+                            </select>
 
 
                     <table id="myTable" className="table table-striped table-bordered table-sm"
                            cellSpacing="0" width="100%">
                         <thead>
                         <tr>
-                            {
-                                 songCounter ? <th className="th-sm">Name</th> : <th className="th-sm">ID</th>
-                            }
-                            <th className="th-sm">User ID
-                            </th>
                             <th className="th-sm">Name
                             </th>
-
+                            <th className="th-sm">User ID
+                            </th>
                             <th className="th-sm">Email
                             </th>
                             <th className="th-sm">Is Admin
+                            </th>
+                            <th className="th-sm">Is Active
                             </th>
 
                         </tr>
@@ -150,19 +192,23 @@ function UserSearch() {
                             myList.length > 0 ?myList.map(res => {
 
                                 let admin;
+                                let active;
 
                                 res.isAdmin ? admin = "True":admin = "False"
+                                res.isActive ? active = "True":active = "False"
 
                                 return(
                                     <>
                                         <tr>
-                                            {
-                                                songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>
-                                            }
-                                            <td>{res.uid}</td>
+                                            {/*{*/}
+                                            {/*    songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>*/}
+                                            {/*}*/}
+
                                             <td>{res.user_Fname} {res.user_Lname}</td>
+                                            <td>{res.uid}</td>
                                             <td>{res.user_email}</td>
                                             <td>{admin}</td>
+                                            <td>{active}</td>
 
                                         </tr>
 
