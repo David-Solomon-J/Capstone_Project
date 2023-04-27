@@ -77,20 +77,6 @@ function UserSearch() {
         let counter = 0;
 
 
-        // Loop through all table rows, and hide those who don't match the search query
-        /*for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    ++counter;
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }*/
-
         let list = fullList.filter((elm)=>{
             console.log(songCounter)
             if(songCounter == 0) {

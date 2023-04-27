@@ -42,7 +42,6 @@ const PlyTable = ({songs, tk}) => {
                     <th id="tHeadI">Artist</th>
                     <th id="tHeadI">Song Name</th>
                     <th id="tHeadI">Album</th>
-                    <th id="tHeadI">Snippit</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,12 +52,18 @@ const PlyTable = ({songs, tk}) => {
 
                         console.log("Hey")
                         console.log(res)
+
+                        let audioUrl = res.preview_url;
+
+                        let artName = res.artists[0].name
+
+                        // console.log(artName)
+
                         return (
                             <tr>
-                                <td id="tItems">Value 1</td>
-                                <td id="tItems">Value 2</td>
-                                <td id="tItems">Value 3</td>
-                                <td id="tItems">Value 4</td>
+                                <td id="tItems">{artName}</td>
+                                <td id="tItems">{res.name}</td>
+                                <td id="tItems">{res.album.name}</td>
                             </tr>
                         )
                     }) : ""

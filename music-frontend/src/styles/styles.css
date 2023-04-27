@@ -244,3 +244,18 @@ h3 {
     display: inline-block;
     width: 20%;
 }
+
+#convoBtn{
+    background-color: transparent;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+#convoBtn:hover{
+    color: #fff;
+    background-color: rgb(10, 25, 41);
+    border-color: #007bff;
+}
+
+

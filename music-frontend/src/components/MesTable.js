@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-const MesTable = ({id}) => {
+const MesTable = ({id, user}) => {
 
     const[conCard, setConCard] = useState([]);
 
@@ -37,12 +37,20 @@ const MesTable = ({id}) => {
     fetchDataCon(id);
     },[])
 
-    console.log(conCard);
+
+    let myName = user.user_Fname + " " + user.user_Lname;
+    let cardName;
+
+    if(myName == conCard.from)
+        cardName = conCard.to
+    else
+        cardName = conCard.from
+
+
 
     return (
             <div className="card-body">
-                <h5 className="card-title">Name: {conCard.from}</h5>
-                <p className="card-text">Some text here</p>
+                <h5 className="card-title">{cardName}</h5>
             </div>
     )
 

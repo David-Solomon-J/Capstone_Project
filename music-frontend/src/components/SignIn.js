@@ -28,7 +28,6 @@ function SignIn() {
         }
 
         useEffect(()=>{
-            //console.log(context.currentUser)
             if(Object.keys(context.currentUser).length != 0)
             {
                 context.setErrors(null, false);

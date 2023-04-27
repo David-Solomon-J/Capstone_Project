@@ -68,7 +68,7 @@ function SignUp() {
 
                                                 <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-                                                <Link to="/Signin">
+                                                <Link to="/">
                                                     <button type="button" className="btn btn-primary btn-lg">Return</button>
                                                 </Link>
                                             </div>

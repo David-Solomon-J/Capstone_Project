@@ -8,12 +8,14 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import SendIcon from '@mui/icons-material/Send';
 
-
 function Messages() {
 
     const[con, setCon] = useState([]);
     const[conCard, setConCard] = useState([]);
     const[id, setId] = useState("");
+    const [showTable, setShowTable] = useState(false);
+    const[myList, setList] = useState([]);
+    const[fullList, setFullList] = useState([]);
 
     const context = useContext(AuthContext)
     const firebaseConfig = {
@@ -40,7 +42,41 @@ function Messages() {
     const db = firebase.firestore();
     let conversations = [];
 
+    useEffect(() => {
+        const getUsers = async () => {
 
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            let stuff = [], list = [];
+
+            const DocumentReference = db.collection("User");
+
+            const Call = async () => {
+                const snapshot = await DocumentReference.get().then(
+                    res => {
+                        res.forEach(doc => {
+                            //console.log(doc.id, '=>', doc.data());
+                            stuff.push(doc.data())
+                        });
+                        return stuff;
+                    }
+                );
+
+                return snapshot
+            }
+
+
+            list = await Call();
+
+            setList(list);
+            setFullList(list);
+
+            //console.log(list);
+
+        }
+
+        getUsers();
+    }, [])
 
 
     const fetchData = async (res) => {
@@ -124,7 +160,65 @@ function Messages() {
         }, 2000);
     }
 
+    const toggleTable = () => {
+        setShowTable(!showTable);
+    };
 
+
+    function strMsg(id){
+
+        let input = window.prompt("Please enter your comment:", "John Doe");
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        db.collection("Messages").doc(id).update({
+            messages: firebase.firestore.FieldValue.arrayUnion(input)
+        }).then(r => {
+            console.log("Message sent");
+        })
+
+    }
+
+
+    async function startConvo(res) {
+
+        const db = firebase.firestore();
+        const msgCollection = db.collection('Messages');
+        const conId = msgCollection.doc().id;
+
+        let name = user.user_Fname + " " + user.user_Lname;
+        let frstMsg = "Conversation has started!"
+        let toMsg = res.user_Fname + " " + res.user_Lname;
+
+        await msgCollection.doc(conId).set({
+            convo_id: conId,
+            from: name,
+            messages:frstMsg,
+            to: toMsg
+        });
+
+        strMsg(conId);
+
+        db.collection("User").doc(user.uid).update({
+            convos: firebase.firestore.FieldValue.arrayUnion(conId)
+        }).then(r => {
+            console.log("Conversation started");
+        })
+
+        console.log(res)
+
+        db.collection("User").doc(res.uid).update({
+            convos: firebase.firestore.FieldValue.arrayUnion(conId)
+        }).then(r => {
+            console.log("Conversation started");
+        })
+
+
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
+
+    }
 
     return (
         <>
@@ -146,7 +240,7 @@ function Messages() {
 
                                         async function getInfo() {
                                             data = await fillConCard(res);
-                                            console.log(data)
+                                            //console.log(data)
                                             return data;
                                         }
 
@@ -154,12 +248,7 @@ function Messages() {
 
                                         return (
                                             <div className="card m-2" type="button" onClick={() => ConCard(res)}>
-                                                {/*<div className="card-body">*/}
-                                                {/*    <h5 className="card-title">Name: {}</h5>*/}
-                                                {/*    <p className="card-text">Some text here</p>*/}
-                                                {/*</div>*/}
-
-                                                <Msg id={res}/>
+                                                <Msg id={res} user={user}/>
                                             </div>
                                         )
                                     }):""
@@ -173,7 +262,7 @@ function Messages() {
 
                                             return(
                                                 <div>
-                                                    <h5 className="card-title">Messages with: {res.from}</h5>
+                                                    <h5 className="card-title">Messages</h5>
 
                                                     {
                                                         con[0] != undefined ? res.messages.map((res) => {
@@ -201,7 +290,38 @@ function Messages() {
                             </div>
                         </div>
                     </div>
+                    <div className="footer">
 
+                        <div>
+                            <button onClick={toggleTable}>Start Conversation</button>
+                            {showTable && (
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Users</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {
+                                        myList.length > 0 ?myList.map(res => {
+
+                                            return(
+                                            <button id="convoBtn" onClick={() => startConvo(res)}>
+                                                <tr>
+                                                    <td>{res.user_Fname} {res.user_Lname}</td>
+                                                </tr>
+                                            </button>
+                                            )
+
+                                        }):""
+                                    }
+
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
             </div>

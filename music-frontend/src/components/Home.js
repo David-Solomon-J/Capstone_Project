@@ -11,6 +11,8 @@ import 'firebase/compat/firestore';
 import CloseIcon from '@mui/icons-material/Close';
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import DeleteIcon from '@mui/icons-material/Delete';
+import PauseIcon from '@mui/icons-material/Pause';
+
 import "firebase/compat/auth";
 
 function Home() {
@@ -23,6 +25,7 @@ function Home() {
 
     let tk = "";
     let user = JSON.parse(localStorage.getItem("user"));
+
 
     let client_id = "4bcd6ab963f844cd984df774aac47791";
     let client_secret = "9c1f076f76c145b4a221386761209322";
@@ -39,11 +42,9 @@ function Home() {
     const db = firebase.firestore();
     const userRef = db.collection("User")
 
+
     useEffect(()=>{
         let user = JSON.parse(localStorage.getItem("user"));
-        //let user = context.currentUser;
-        //let obj = JSON.stringify(user);
-        //localStorage.setItem("user", obj);
         context.getInfo(user.uid);
 
     },[])
@@ -245,8 +246,6 @@ function Home() {
                 window.location.href = window.location.href;
             }, 3000);
 
-            // console.log(newRate + " + " + x + " + " + y + " + /2" )
-
 
         }
 
@@ -255,6 +254,7 @@ function Home() {
     function handleInputChange(event) {
         setInputValue(event.target.value);
     }
+
 
 
     function delAct(){
@@ -276,6 +276,14 @@ function Home() {
 
         window.location.href = '/';
 
+    }
+
+    function inAct(){
+        console.log("Hey")
+        userRef.doc(user.uid).update({
+            isActive: false
+        }).then(r => {});
+        alert("User is now Paused, Reach out to an admin to unpause you account")
     }
 
         return (
@@ -385,6 +393,10 @@ function Home() {
 
                                         <button id="delAct" onClick={() => delAct()}>
                                         <DeleteIcon/>
+                                        </button>
+
+                                        <button id="inAct" onClick={() => inAct()}>
+                                            <PauseIcon/>
                                         </button>
 
                                     </div>

@@ -76,6 +76,7 @@ export class AuthProvider extends Component {
             signInWithEmailAndPassword(auth, email, password)
                 .then(async (cred)=>{
                     console.log(cred.user.uid);
+
                     this.uidNum = cred.user.uid;
 
 
@@ -278,6 +279,7 @@ export class AuthProvider extends Component {
                         user_Lname: "",
                         user_email: email,
                         user_plyst: [],
+                        convos: [],
                     });
                 })
                 .catch((error) => {
