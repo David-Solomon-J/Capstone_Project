@@ -77,6 +77,20 @@ function UserSearch() {
         let counter = 0;
 
 
+        // Loop through all table rows, and hide those who don't match the search query
+        /*for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    ++counter;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }*/
+
         let list = fullList.filter((elm)=>{
             console.log(songCounter)
             if(songCounter == 0) {
@@ -114,6 +128,7 @@ function UserSearch() {
 
 
 
+
     function handleChange() {
         const dropdown = document.getElementById("dropdown");
         const selectedValue = dropdown.value;
@@ -133,90 +148,107 @@ function UserSearch() {
 
     }
 
-        return (
-            <>
-                <div className="wrapper" id="wrapper">
-                    {
-                        isAdm ? <NavBarAdm />:<NavBar />
-                    }
-                    <div className="container" id="bdy">
-                        <h2>Users Reports</h2>
+    function infoDisplay(res){
+        alert("Name: " + res.user_Fname + " " + res.user_Lname + "\n" +
+            "isAdmin: " + res.isAdmin + "\n" +
+            "User ID: " + res.uid + "\n" +
+            "Email: " + res.user_email+ "\n" +
+            "# Of playlist: " + res.gen_pylists.length);
+        console.log(res)
+    }
+
+    return (
+        <>
+            <div className="wrapper" id="wrapper">
+                {
+                    isAdm ? <NavBarAdm />:<NavBar />
+                }
+                <div className="container" id="bdy">
+                    <h2>Users Reports</h2>
 
 
-                        <div className="tableBody">
-                            <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
+                    <div className="tableBody">
+                        <input type="text" id="myInput" onKeyUp={() => myFunction()} placeholder={search_value}/>
 
-                            <br/>
-                            <label htmlFor="dropdown">Search by:</label>
-                            <select id="dropdown" onChange={() => handleChange()}>
-                                <option value="name">Name</option>
-                                <option value="ID">ID</option>
-                            </select>
-
-
-                    <table id="myTable" className="table table-striped table-bordered table-sm"
-                           cellSpacing="0" width="100%">
-                        <thead>
-                        <tr>
-                            <th className="th-sm">Name
-                            </th>
-                            <th className="th-sm">User ID
-                            </th>
-                            <th className="th-sm">Email
-                            </th>
-                            <th className="th-sm">Is Admin
-                            </th>
-                            <th className="th-sm">Is Active
-                            </th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {
-
-                            myList.length > 0 ?myList.map(res => {
-
-                                let admin;
-                                let active;
-
-                                res.isAdmin ? admin = "True":admin = "False"
-                                res.isActive ? active = "True":active = "False"
-
-                                return(
-                                    <>
-                                        <tr>
-                                            {/*{*/}
-                                            {/*    songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>*/}
-                                            {/*}*/}
-
-                                            <td>{res.user_Fname} {res.user_Lname}</td>
-                                            <td>{res.uid}</td>
-                                            <td>{res.user_email}</td>
-                                            <td>{admin}</td>
-                                            <td>{active}</td>
-
-                                        </tr>
-
-                                    </>
-                                )
-
-                            }): ""
+                        <br/>
+                        <label htmlFor="dropdown">Search by:</label>
+                        <select id="dropdown" onChange={() => handleChange()}>
+                            <option value="name">Name</option>
+                            <option value="ID">ID</option>
+                        </select>
 
 
-                        }
+                        <table id="myTable" className="table table-striped table-bordered table-sm"
+                               cellSpacing="0" width="100%">
+                            <thead>
+                            <tr>
+                                <th className="th-sm">Name
+                                </th>
+                                <th className="th-sm">User ID
+                                </th>
+                                <th className="th-sm">Email
+                                </th>
+                                <th className="th-sm">Is Admin
+                                </th>
+                                <th className="th-sm">Is Active
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {
+
+                                myList.length > 0 ?myList.map(res => {
+
+                                    let admin;
+                                    let active;
+
+                                    res.isAdmin ? admin = "True":admin = "False"
+                                    res.isActive ? active = true :active = false
+
+                                    const toggleActive = (uid,active) => {
+                                        context.changeActive(uid,!active);
+                                    }
+
+                                    return(
+                                        <>
+                                            <tr>
+                                                {/*{*/}
+                                                {/*    songCounter ? <td>{res.user_Fname} {res.user_Lname}</td> : <td>{res.uid}</td>*/}
+                                                {/*}*/}
+
+                                                <button id ="infoDis" onClick={() => infoDisplay(res)}>
+                                                <td>{res.user_Fname} {res.user_Lname}</td>
+                                                </button>
+                                                <td>{res.uid}</td>
+                                                <td>{res.user_email}</td>
+                                                <td>{admin}</td>
+                                                <td><button onClick={() => toggleActive(res.uid, active)}>
+                                                    {active ? "Active" : "inActive"}
+                                                </button></td>
+
+                                            </tr>
+
+                                        </>
+                                    )
+
+                                }): ""
 
 
-                        </tbody>
+                            }
 
-                    </table>
-                        </div>
+
+                            </tbody>
+
+                        </table>
+                    </div>
 
 
                 </div>
-                </div>
-            </>
-        );
+            </div>
+        </>
+    );
 }
 
 

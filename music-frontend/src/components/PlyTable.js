@@ -13,21 +13,24 @@ const PlyTable = ({songs, tk}) => {
         let list = [];
 
         await Promise.all(songs.map(async (id) => {
-            const plyListURL = 'https://api.spotify.com/v1/tracks/' + id;
-            const resultSongs = await fetch(plyListURL, {
-                method: 'GET',
-                headers: {'Authorization': 'Bearer ' + tk}
-            })
-                .then(res => res.json())
-                .then(res => {
-                    console.log(res)
-                    list.push(res)
-                });
+            if(id.length > 2) {
+                const plyListURL = 'https://api.spotify.com/v1/tracks/' + id;
+                const resultSongs = await fetch(plyListURL, {
+                    method: 'GET',
+                    headers: {'Authorization': 'Bearer ' + tk}
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        //console.log(res)
+                        list.push(res)
+                    });
+            }
+
         }));
         setTracks(list);
 
         // At this point, all track data should be fetched and pushed into the tracks array
-        console.log(tracks);
+        //console.log(tracks);
 
     }
 
@@ -50,8 +53,8 @@ const PlyTable = ({songs, tk}) => {
 
                     tracks.length > 0 ? tracks.map((res) => {
 
-                        console.log("Hey")
-                        console.log(res)
+                        //console.log("Hey")
+                        //console.log(res)
 
                         let audioUrl = res.preview_url;
 

@@ -103,7 +103,7 @@ class Reports extends Component {
         const db = firebase.firestore();
 
         //Finds and stores the all the plylist id's in Firebase
-        const DocumentReference = db.collection("User");
+        const DocumentReference = db.collection("Playlist");
 
         let plyst = DocumentReference.get().then(
             async res => {
@@ -111,12 +111,12 @@ class Reports extends Component {
                     //console.log(doc.id, '=>', doc.data());
                     //console.log(doc.data())
 
-                    if (doc.data().user_plyst != undefined) {
-                        let size = doc.data().user_plyst.length
+                    if (doc.data().songs != undefined) {
+                        let size = doc.data().songs.length
 
                         for (let i = 0; i < size; ++i) {
                             //console.log(doc.data().user_plyst[0])
-                            plylstList.push(doc.data().user_plyst[i]);
+                            plylstList.push(doc.data().songs[i]);
 
                         }
 
@@ -131,37 +131,33 @@ class Reports extends Component {
         let token = this.state.tk;
         let mySongs = [];
 
-        //Loopd through all plylist and extracts information using the various stord id's
+        //console.log(this.state.playlistList)
+
+        // //Loopd through all plylist and extracts information using the various stord id's
         for (let elm in this.state.playlistList) {
 
-            const getPlaylist = async (token) => {
+            if(this.state.playlistList[elm] != "") {
+                const getTracks = async (token) => {
 
-
-                const plyListURL = 'https://api.spotify.com/v1/playlists/' + this.state.playlistList[elm] + '/tracks';
-                const result = await fetch(plyListURL, {
-                    method: 'GET',
-                    headers: {'Authorization': 'Bearer ' + token}
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        //console.log(data.items);
-
-                        for (let i = 0; i < data.items.length; ++i) {
+                    const plyListURL = 'https://api.spotify.com/v1/tracks/' + this.state.playlistList[elm];
+                    const result = await fetch(plyListURL, {
+                        method: 'GET',
+                        headers: {'Authorization': 'Bearer ' + token}
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data)
                             let genre;
-                            let nameTrack = data.items[i].track.name;
-                            let nameAlbum = data.items[i].track.album.name;
-                            let trackId = data.items[i].track.id;
-                            let nameArtist = data.items[i].track.artists[0].name;
-                            let dropDate = data.items[i].track.album.release_date;
-                            let audioUrl = data.items[i].track.preview_url;
+                            let nameTrack = data.name;
+                            let nameAlbum = data.album.name;
+                            let trackId = data.id;
+                            let nameArtist = data.artists[0].name;
+                            let dropDate = data.album.release_date;
+                            let audioUrl = data.preview_url;
 
-                            //mySongs.push(data.items[i].track);
-                            //console.log(data.items[i].track)
+                            const getTracksG = async (token) => {
 
-                            // console.log(data.items[i].track)
-                            const getTracks = async (token) => {
-
-                                const plyListURL = 'https://api.spotify.com/v1/artists/' + data.items[i].track.artists[0].id;
+                                const plyListURL = 'https://api.spotify.com/v1/artists/' + data.artists[0].id;
                                 const result = await fetch(plyListURL, {
                                     method: 'GET',
                                     headers: {'Authorization': 'Bearer ' + token}
@@ -170,7 +166,6 @@ class Reports extends Component {
                                     .then(data => {
 
                                         genre = data.genres[0];
-
 
                                     });
 
@@ -189,19 +184,17 @@ class Reports extends Component {
 
                             }
 
+                            getTracksG(token);
 
-                            getTracks(token);
+                        });
 
-                        }
 
-                    });
+                }
 
+                await getTracks(token);
             }
 
-            await getPlaylist(token);
-
         }
-
 
         this.setState({songs: mySongs});
         console.log(this.state.songs)

@@ -258,4 +258,30 @@ h3 {
     border-color: #007bff;
 }
 
+#plyChoiceBtn{
+    background-color: transparent;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+#plyChoiceBtn:hover{
+    color: #fff;
+    background-color: rgb(10, 25, 41);
+    border-color: #007bff;
+}
+
+#infoDis{
+    color: black;
+    background-color: white;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#infoDis:hover {
+    background-color: grey;
+}
+
+
+
 

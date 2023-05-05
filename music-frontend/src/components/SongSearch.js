@@ -3,30 +3,29 @@ import '../styles/songSearch.scss'
 import React, {Component} from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import NavBarAdm from "./NavBarAdm";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 
 class SongSearch extends Component{
     constructor(props) {
         super(props);
-        this.state = {songs: [], tk: ""}
+        this.state = {songs: [], tk: "", isListVisible: false, plylists: []}
         this.handelClick = this.handelClick.bind(this);
+        this.addSong = this.addSong.bind(this);
 
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
 
         let client_id = "4bcd6ab963f844cd984df774aac47791";
         let client_secret = "9c1f076f76c145b4a221386761209322";
         let key = '';
         let num = '';
 
-        let qInput = 'Kendrick';
-        let tInput = 'track';
-        let gInput = 'Rap';
 
-
-//Async Function (Post method) to get API key
+        //Async Function (Post method) to get API key
         const getToken = async () => {
             //Fetch using spotify base URL and headers containing client id & secret
             const result = await fetch('https://accounts.spotify.com/api/token', {
@@ -54,6 +53,41 @@ class SongSearch extends Component{
 
 
         getToken();
+
+
+        let user = JSON.parse(localStorage.getItem("user"));
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+            authDomain: "capstoneproj-music.firebaseapp.com",
+            projectId: "capstoneproj-music",
+            storageBucket: "capstoneproj-music.appspot.com",
+            messagingSenderId: "81179338296",
+            appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+        };
+
+        // Creates connection to firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const genPylistRef = db.collection("Playlist");
+        const list = [];
+
+        for (let i = 0; i < user.gen_pylists.length; ++i) {
+            await genPylistRef.doc(user.gen_pylists[i]).get().then((doc) => {
+                if (doc.exists) {
+                    // extract data from the snapshot
+                    const data = doc.data();
+                    //console.log(data.name);
+                    list.push(data);
+                } else {
+                    //console.log("No such document!");
+                }
+            });
+        }
+
+        console.log(list)
+
+        this.setState({plylists: list})
 
 
     }
@@ -84,14 +118,69 @@ class SongSearch extends Component{
         getTrack();
     }
 
+    handelClickY(qInput, yInput){
+        console.log("hello")
+
+        //let qInput = 'Duckwrth';
+        let tInput = 'track';
+        let gInput = 'Rap';
+
+        const getTrack = async () => {
+
+            const plyListURL = 'https://api.spotify.com/v1/search?query=' + qInput +'&year=' + yInput + '&type=' + tInput + "&limit=30";
+            const resultSongs = await fetch(plyListURL, {
+                method: 'GET',
+                headers: {'Authorization': 'Bearer ' + this.state.tk}
+            })
+                .then(res => {
+                    return res.json()
+                })
+                .then(res => {
+                    console.log(res)
+                    this.setState({songs: res.tracks.items})
+                })
+
+        }
+        getTrack();
+    }
+
+    addSong(res){
+        console.log(res.id)
+        if(this.state.isListVisible == false)
+            this.setState({isListVisible: true})
+        else
+            this.setState({isListVisible: false})
+    }
+
+    selSong(pyId, songId){
+        const firebaseConfig = {
+            apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+            authDomain: "capstoneproj-music.firebaseapp.com",
+            projectId: "capstoneproj-music",
+            storageBucket: "capstoneproj-music.appspot.com",
+            messagingSenderId: "81179338296",
+            appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        db.collection("Playlist").doc(pyId).update({
+            songs: firebase.firestore.FieldValue.arrayUnion(songId)
+        }).then(r => {
+            alert("Song has been added to playlist")
+        })
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
+    }
+
 
 
     render(){
+
+        console.log(this.state.plylists)
         let user = JSON.parse(localStorage.getItem("user"));
 
-        function addSong(res){
-
-        }
 
     return(
 
@@ -131,13 +220,27 @@ class SongSearch extends Component{
                                                                 controls
                                                                 src={audioUrl}>
                                                             </audio>
-                                                     <button id="addBtn" onClick={() => addSong(song)}>
+                                                     <button id="addBtn" onClick={() => this.addSong(song)}>
                                                         <AddIcon/>
-
                                                     </button>
 
                                                     </div>
+                                                    <div>
+                                                        <ul>
+                                                        {this.state.isListVisible && (
 
+                                                            this.state.plylists != undefined ? this.state.plylists.map(r => {
+                                                                //console.log(r)
+                                                                return (
+                                                                    <button id="plyChoiceBtn" onClick={() => this.selSong(r.id, song.id)}>
+                                                                        <li>{r.name}</li>
+                                                                    </button>
+                                                                )
+                                                            }):""
+
+                                                        )}
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -151,6 +254,8 @@ class SongSearch extends Component{
                             </div>
                         </div>
                     </div>
+
+
 
                 <div className="searchContainer" id="searchContainer">
                     <div className="row mb-3">
@@ -200,9 +305,20 @@ class SongSearch extends Component{
                                 Ms. Hill
                             </button>
                         </div>
-                    </div>
+                        <div className="col d-flex align-content-center">
+                            <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("songs", "2010")}>
+                                2010 Hits
+                            </button>
+                        </div>
+
+                    <div className="col d-flex align-content-center">
+                        <button className="btn btn-secondary btn-large" onClick={() => this.handelClick("tracks", "1990")}>
+                            Oldies
+                        </button>
                     </div>
                 </div>
+            </div>
+            </div>
 
             {/*</div>*/}
         </>

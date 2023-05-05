@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PauseIcon from '@mui/icons-material/Pause';
 
 import "firebase/compat/auth";
+import PlyTable from "./PlyTable";
 
 function Home() {
 
@@ -22,8 +23,9 @@ function Home() {
     const[coPlaylist, setCoPlaylist] = useState([]);
     const [counter, setCounter] = useState(0);
     const [inputValue, setInputValue] = useState("");
+    const[tk, setTk]= useState("");
+    const[spfyTracks, setSpfyTracks]= useState([]);
 
-    let tk = "";
     let user = JSON.parse(localStorage.getItem("user"));
 
 
@@ -65,6 +67,7 @@ function Home() {
     useEffect(() => {
 //Async Function (Post method) to get API key
     const getToken = async () => {
+        let x;
         //Fetch using spotify base URL and headers containing client id & secret
         const result = await fetch('https://accounts.spotify.com/api/token', {
             method: 'POST',
@@ -76,42 +79,43 @@ function Home() {
         })
             //Then response with assign function to access variable in promise
             .then(res => res.json())
-            .then(data => assignTK(data.access_token))
-        //.then(() => console.log(num));
-
+            .then(async data => {
+                console.log(data.access_token)
+                await setTk(data.access_token)
+                x = data.access_token
+                // return data.access_token;
+            })
+        return x;
     }
 
-    const getPlaylist = async (token) => {
 
-        const plyListURL = 'https://api.spotify.com/v1/browse/featured-playlists?limit=20';
-        const result = await fetch(plyListURL, {
-            method: 'GET',
-            headers: { 'Authorization' : 'Bearer ' + token}
-        })
-            .then(res => res.json())
-            //.then(data => console.log(data.playlists.items[0].images[0].url))
-            .then(data => {
-                //useEffect((x) => {
-                    setPlylist(data.playlists.items)
-                //}, []);
-            });
+    const getPlaylist = async (tk) => {
+
+        console.log(tk)
+
+            const plyListURL = 'https://api.spotify.com/v1/browse/featured-playlists?limit=20';
+            const result = await fetch(plyListURL, {
+                method: 'GET',
+                headers: {'Authorization': 'Bearer ' + tk}
+            })
+                .then(async res => await res.json())
+                //.then(data => console.log(data.playlists.items[0].images[0].url))
+                .then(async data => {
+                    //useEffect((x) => {
+                    await setPlylist(data.playlists.items)
+                    //}, []);
+                });
         //data.playlists.items
 
     }
 
 
-
-    let assignTK = (x) => {
-        tk = x;
-
-        getPlaylist(tk);
-
-        //getTracks(x);
-        return tk;
-    }
+    getToken().then(r => {
+        console.log(r)
+        getPlaylist(r)
+    });
 
 
-    getToken();
 
     },[])
 
@@ -258,24 +262,38 @@ function Home() {
 
 
     function delAct(){
+        // Get the currently authenticated user
         let user = firebase.auth().currentUser;
 
         userRef.doc(user.uid).delete()
             .then(() => {
-
+                console.log("Document successfully deleted")
             })
             .catch((error) => {
-
+                //console.log("Document did not deleted")
             });
 
+        // Delete the user account
         user.delete().then(function() {
+            // Delete the corresponding user document from Firestore
+            userRef.doc(user.uid).delete()
+                .then(() => {
+                    // Document successfully deleted
+                })
+                .catch((error) => {
+                    // An error occurred while deleting the document
+                });
+
             console.log("Document successfully deleted!");
+        }).then(res => {
+            // Show an alert message to confirm the deletion
+            alert("User has been deleted")
+            // Redirect the user to the homepage
+            window.location.href = '/';
         }).catch(function(error) {
+            // An error occurred while deleting the user account
             console.error("Error removing document: ", error);
         });
-
-        window.location.href = '/';
-
     }
 
     function inAct(){
@@ -285,6 +303,10 @@ function Home() {
         }).then(r => {});
         alert("User is now Paused, Reach out to an admin to unpause you account")
     }
+
+    function SptfyTracks(ref){
+
+    };
 
         return (
             <>
@@ -405,7 +427,8 @@ function Home() {
                         </div>
 
 
-                        <div className="containerPlylist">
+                        <div className="containerPlylist m-3">
+                            <h2>Spotify Playlist</h2>
                             <div className="row m-lg-2">
                                 {
                                     plylist != undefined ? plylist.map((playlist)=>{
@@ -413,6 +436,11 @@ function Home() {
                                         let iurl = ""
                                         if(playlist.images)
                                             iurl = playlist.images[0].url;
+
+                                        console.log(playlist.href)
+
+                                        // SptfyTracks();
+
                                         return(
                                             <div className="col-md-4 mb-3">
                                                 <div className="card h-100 position-relative">
@@ -423,18 +451,13 @@ function Home() {
                                                         <h6 className="card-subtitle mb-2">{}</h6>
                                                         <p className="card-text">{}</p>
 
-                                                        <div className="rate">
-                                                            <input type="radio" id="star5" name="rate" value="5"/>
-                                                            <label htmlFor="star5" title="text">5 stars</label>
-                                                            <input type="radio" id="star4" name="rate" value="4"/>
-                                                            <label htmlFor="star4" title="text">4 stars</label>
-                                                            <input type="radio" id="star3" name="rate" value="3"/>
-                                                            <label htmlFor="star3" title="text">3 stars</label>
-                                                            <input type="radio" id="star2" name="rate" value="2"/>
-                                                            <label htmlFor="star2" title="text">2 stars</label>
-                                                            <input type="radio" id="star1" name="rate" value="1"/>
-                                                            <label htmlFor="star1" title="text">1 star</label>
+                                                        <div className="table-wrapper">
+                                                            {/*{*/}
+                                                            {/*    res.songs != undefined ?*/}
+                                                            {/*        <PlyTable songs={res.songs} tk={tk}/> : ""*/}
+                                                            {/*}*/}
                                                         </div>
+
 
                                                     </div>
                                                     <br/>
@@ -467,14 +490,6 @@ function Home() {
                                             // console.log(userHasPly)
 
                                             let ctr = 0;
-                                            // let commLength;
-                                            //
-                                            //
-                                            // if(typeof(res.comments) !== undefined)
-                                            //     console.log(res.comments)
-                                            // else
-                                            //     console.log(0);
-
 
 
                                             function nxtComment(x){
@@ -521,6 +536,17 @@ function Home() {
 
                                                             <div className="card-text m-4"> Playlist
                                                                 Rating: {res.rating} </div>
+
+                                                        </div>
+
+                                                        <div className="card-text m-lg-3 mt-0">Playlist songs
+
+                                                            <div className="table-wrapper">
+                                                                {
+                                                                    res.songs != undefined ?
+                                                                        <PlyTable songs={res.songs} tk={tk}/> : ""
+                                                                }
+                                                            </div>
 
                                                         </div>
 

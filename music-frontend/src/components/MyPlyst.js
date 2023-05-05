@@ -116,6 +116,9 @@ const MyPlyst = () => {
         let userName = user.user_Fname + " " + user.user_Lname;
 
         context.createPlaylist(playlistName,playlistDescription, user.uid, userName);
+        setTimeout(function() {
+            window.location.href = window.location.href;
+        }, 3000);
     }
 
 

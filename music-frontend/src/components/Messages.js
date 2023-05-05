@@ -167,7 +167,7 @@ function Messages() {
 
     function strMsg(id){
 
-        let input = window.prompt("Please enter your comment:", "John Doe");
+        let input = window.prompt("Please enter your Message:", "Hello");
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();

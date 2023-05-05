@@ -15,6 +15,7 @@ export const AuthContext = React.createContext({
     setAllUsers: () =>{},
     getUsers: () =>{},
     getInfo: () =>{},
+    changeActive: () =>{},
     changeName: () => {},
     signIn: () =>{},
     signOut: () =>{},
@@ -223,6 +224,8 @@ export class AuthProvider extends Component {
                 dateCreated: formattedDate,
                 createdBy: userName,
                 comments: comm,
+                songs: [],
+                rating: 5
             }).then(() => {
 
                 console.log(playlistId);
@@ -236,7 +239,7 @@ export class AuthProvider extends Component {
                 console.error('Error creating playlist: ', error);
             });
         },
-        signUp: async (email, password) => {
+        signUp: async (email, password, fname, lname) => {
             const firebaseConfig = {
                 apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
                 authDomain: "capstoneproj-music.firebaseapp.com",
@@ -275,8 +278,8 @@ export class AuthProvider extends Component {
                         isAdmin: false,
                         isActive: true,
                         uid: userId,
-                        user_Fname: "",
-                        user_Lname: "",
+                        user_Fname: fname,
+                        user_Lname: lname,
                         user_email: email,
                         user_plyst: [],
                         convos: [],
@@ -288,6 +291,33 @@ export class AuthProvider extends Component {
                     alert(errorCode);
                     alert(errorMessage);
                 });
+        },
+        changeActive: async (ID, active)=> {
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyC3Bg51SA_DrEwfaF4u4rGb7MuSdnSHY9E",
+                authDomain: "capstoneproj-music.firebaseapp.com",
+                projectId: "capstoneproj-music",
+                storageBucket: "capstoneproj-music.appspot.com",
+                messagingSenderId: "81179338296",
+                appId: "1:81179338296:web:3199ab9d91c91054eaa8cd"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const userRef = db.collection('User');
+
+            //Working Set Function!!!!!
+            console.log(ID)
+            await userRef.doc(ID).update({
+                isActive: active
+            });
+
+            alert("User activity has been changed")
+            setTimeout(function() {
+                window.location.href = window.location.href;
+            }, 3000);
+
         },
 
     }
@@ -307,10 +337,10 @@ export class AuthProvider extends Component {
     render() {
 
         const { children } = this.props
-        const {currentUser, allUsers, errors, cart,refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, createPlaylist, signUp } = this.state
+        const {currentUser, allUsers, errors, cart,refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeActive, changeName, signIn, signOut, createPlaylist, signUp } = this.state
 
         return (
-            <AuthContext.Provider value={{currentUser, allUsers, errors, cart, refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeName, signIn, signOut, createPlaylist, signUp}}>
+            <AuthContext.Provider value={{currentUser, allUsers, errors, cart, refresh, setErrors, setCurrentUser, setAllUsers, getUsers, getInfo, changeActive, changeName, signIn, signOut, createPlaylist, signUp}}>
                 {children}
             </AuthContext.Provider>
         );

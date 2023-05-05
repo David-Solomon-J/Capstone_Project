@@ -8,6 +8,8 @@ function SignUp() {
     const context = useContext(AuthContext);
     const emailRef = useRef("");
     const passwordRef = useRef("");
+    const lnameRef = useRef("");
+    const fnameRef = useRef("");
     const [errors, setErrors] = useState([]);
     let navigate = useNavigate();
 
@@ -21,7 +23,7 @@ function SignUp() {
             console.log("Step1")
         }
 
-        let x = context.signUp(emailRef.current.value, passwordRef.current.value);
+        let x = context.signUp(emailRef.current.value, passwordRef.current.value, fnameRef.current.value, lnameRef.current.value);
 
         console.log(context.currentUser);
         if(x != null){
@@ -48,6 +50,18 @@ function SignUp() {
                                         <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
                                         <form className="mx-1 mx-md-4" onSubmit={handleSubmit}>
+
+                                            <div className="input-group mb-3 w-100 center">
+                                                <span className="input-group-text" id="basic-addon1">First Name</span>
+                                                <input type="text" className="form-control" placeholder="First Name" aria-label="Username"
+                                                       aria-describedby="basic-addon1" required ref={fnameRef}/>
+                                            </div>
+
+                                            <div className="input-group mb-3 w-100 center">
+                                                <span className="input-group-text" id="basic-addon1">Last Name</span>
+                                                <input type="text" className="form-control" placeholder="First Name" aria-label="Username"
+                                                       aria-describedby="basic-addon1" required ref={lnameRef}/>
+                                            </div>
 
 
                                             <div className="input-group mb-3 w-100 center">
